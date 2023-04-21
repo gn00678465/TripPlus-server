@@ -1,4 +1,4 @@
-# TripPlus+ 募資平台-前台 Api
+# TripPlus+ 募資平台 api
 
 ## Setup
 ```
