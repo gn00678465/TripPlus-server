@@ -8,8 +8,8 @@ pnpm run start
 
 ## Branch
 * 主分支：main
-* 開發分支：develop，基於 main 創建
-* 功能分支：feature，基於 develop 創建
+* 開發分支：development，基於 main 創建
+* 功能分支：feature，基於 development 創建
 * 錯誤分支：hotfix，基於 main 創建
 
 ## Commit
