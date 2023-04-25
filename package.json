@@ -37,5 +37,10 @@
     "@commitlint/cli": "^17.6.1",
     "@commitlint/config-conventional": "^17.6.1",
     "husky": "^8.0.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "qs@>=6.5.0 <6.5.3": ">=6.5.3"
+    }
   }
 }
