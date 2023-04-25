@@ -17,9 +17,7 @@
       "description": "使用者 router"
     }
   ],
-  "schemes": [
-    "http"
-  ],
+  "schemes": ["http"],
   "paths": {
     "/": {
       "get": {

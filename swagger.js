@@ -5,13 +5,13 @@ const doc = {
     // by default: empty Array
     {
       name: 'Index',
-      description: '首頁 router',
+      description: '首頁 router'
     },
     {
       name: 'Users',
-      description: '使用者 router',
-    },
-  ],
+      description: '使用者 router'
+    }
+  ]
 };
 
 const outputFile = './swagger_output.json'; // 輸出的文件名稱
