@@ -10,7 +10,7 @@ const passport = require('passport');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
-const uploadRouter = require('./routes/upload');
+//const uploadRouter = require('./routes/upload');
 
 require('./connections');
 
@@ -38,7 +38,7 @@ app.use('/test', express.static('public'));
 app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/auth', authRouter);
-app.use('/upload', uploadRouter);
+//app.use('/upload', uploadRouter);
 
 // 404 Not Found
 app.use(function (req, res, next) {
