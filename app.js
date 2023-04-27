@@ -76,29 +76,33 @@ const resErrorDev = (err, res) => {
 
 // error handler
 app.use(function (err, req, res, next) {
-  err.statusCode = err.statusCode || 500;
-
   //mongo db users collection email duplicate
   if (err.message?.includes('E11000 duplicate key error collection')) {
-    return res.status(400).json({
-      status: 'Error',
-      message: '註冊失敗，此 email 已經申請過帳號'
-    });
+    err.statusCode = 400;
+    err.isOperational = true;
+    err.message = '註冊失敗，此 email 已經申請過帳號';
   }
+
+  if (err.name === 'ValidationError') {
+    err.statusCode = 400;
+    err.message = '資料欄位未填寫正確，請重新輸入！';
+    err.isOperational = true;
+  }
+
+  if (err.name === 'TokenExpiredError') {
+    err.statusCode = 401;
+    err.message = '登入逾時，請再登入一次';
+    err.isOperational = true;
+  }
+
+  err.statusCode = err.statusCode || 500;
 
   // dev
   if (process.env.NODE_ENV === 'dev') {
     return resErrorDev(err, res);
   }
-
   // prod
-  if (err.name === 'ValidationError') {
-    err.message = '資料欄位未填寫正確，請重新輸入！';
-    err.isOperational = true;
-    return resErrorProd(err, res);
-  }
-
-  resErrorProd(err, res);
+  return resErrorProd(err, res);
 });
 
 //unhandled rejection
