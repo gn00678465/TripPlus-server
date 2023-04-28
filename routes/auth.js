@@ -2,7 +2,6 @@ const express = require('express');
 const { isAuth, generateSendJWT } = require('../services/auth');
 
 const router = express.Router();
-require('dotenv').config({ path: './config.env' });
 
 const AuthController = require('../controllers/auth');
 const googlePassport = AuthController.googlePassport;
