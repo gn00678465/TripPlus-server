@@ -2,10 +2,8 @@ const mongoose = require('mongoose');
 
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const { isAuth, generateSendJWT } = require('../../services/auth');
 
 const User = require('../../models/usersModel');
-require('dotenv').config({ path: './config.env' });
 
 const googlePassport = passport.use(
   new GoogleStrategy(

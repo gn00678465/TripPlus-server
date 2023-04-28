@@ -1,17 +1,5 @@
 const express = require('express');
-const mongoose = require('mongoose');
-
-const bcrypt = require('bcryptjs');
-const validator = require('validator');
-
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const { isAuth, generateSendJWT } = require('../services/auth');
-
-const appError = require('../services/appError');
-const handleErrorAsync = require('../services/handleErrorAsync');
-
-const User = require('../models/usersModel');
 
 const router = express.Router();
 require('dotenv').config({ path: './config.env' });
