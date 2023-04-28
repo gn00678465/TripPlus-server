@@ -23,12 +23,12 @@ router.post(
 
     // 內容不可為空
     if (!email || !password || !confirmPassword || !name) {
-      return next(appError('400', '註冊失敗，欄位未填寫正確！'));
+      return next(appError(400, '註冊失敗，欄位未填寫正確！'));
     }
 
     // 密碼正確
     if (password !== confirmPassword) {
-      return next(appError('400', '註冊失敗，密碼不一致！'));
+      return next(appError(400, '註冊失敗，密碼不一致！'));
     }
 
     // 密碼强度
@@ -40,16 +40,16 @@ router.post(
 
     // 是否為 Email
     if (!validator.isEmail(email)) {
-      return next(appError('400', '註冊失敗，Email 格式不正確'));
+      return next(appError(400, '註冊失敗，Email 格式不正確'));
     }
 
     // 確認該 email 為第一次註冊 或 google sso
     const user = await User.findOne({ email: email });
     if (user && user.isGoogleSSO === 0) {
-      return next(appError('400', '註冊失敗，此 email 曾註冊過'));
+      return next(appError(400, '註冊失敗，此 email 曾註冊過'));
     }
     if (user && user.isGoogleSSO === 1) {
-      return next(appError('400', '註冊失敗，此 email 請以 google 第三方登入'));
+      return next(appError(400, '註冊失敗，此 email 請以 google 第三方登入'));
     }
 
     // 加密密碼
