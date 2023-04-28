@@ -44,7 +44,8 @@ const userSchema = new mongoose.Schema(
       type: Array
     },
     isGoogleSSO: {
-      type: Number //0 is not; 1 is google sso
+      type: Number, //0 is not; 1 is google sso
+      default: 0
     },
     roles: {
       type: Array,
