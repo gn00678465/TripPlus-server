@@ -5,5 +5,6 @@ const UserController = require('../controllers/user');
 
 router.get('/account', isAuth, UserController.getUser);
 router.patch('/account', isAuth, UserController.editUser);
+router.patch('/change-password', isAuth, UserController.updatePassword);
 
 module.exports = router;
