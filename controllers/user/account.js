@@ -76,6 +76,9 @@ const updatePassword = handleErrorAsync(async (req, res, next) => {
   const { oldPassword, password, confirmPassword } = req.body;
   const { email, isGoogleSSO } = req.user;
   const currentUser = await User.findOne({ email }).select('+password');
+  if (!oldPassword || !password || !confirmPassword) {
+    return next(appError(401, '編輯失敗，欄位未填寫正確！'));
+  }
   if (isGoogleSSO) {
     return next(appError(401, '此帳號 Google 登入，無法變更密碼'));
   }
@@ -85,9 +88,6 @@ const updatePassword = handleErrorAsync(async (req, res, next) => {
   );
   if (!isPasswordMatched) {
     return next(appError(401, '原密碼錯誤，無法變更密碼'));
-  }
-  if (!password) {
-    return next(appError(401, '未輸入新密碼'));
   }
   const errMsgAry = [];
   if (password !== confirmPassword) {
@@ -99,7 +99,7 @@ const updatePassword = handleErrorAsync(async (req, res, next) => {
   if (errMsgAry.length > 0) {
     return next(appError(401, errMsgAry.join(',')));
   }
-  newPassword = await bcrypt.hash(password, 12);
+  let newPassword = await bcrypt.hash(password, 12);
   const user = await User.findByIdAndUpdate(
     req.user.id,
     {
