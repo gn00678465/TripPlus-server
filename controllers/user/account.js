@@ -1,8 +1,9 @@
+const bcrypt = require('bcryptjs');
+const validator = require('validator');
 const User = require('../../models/usersModel');
 const appError = require('../../services/appError');
 const handleErrorAsync = require('../../services/handleErrorAsync');
 const successHandler = require('../../services/successHandler');
-const validator = require('validator');
 const phoneRule = /^09\d{8}$/;
 
 const getUser = handleErrorAsync(async (req, res, next) => {
@@ -71,4 +72,42 @@ const editUser = handleErrorAsync(async (req, res, next) => {
   }
 });
 
-module.exports = { getUser, editUser };
+const updatePassword = handleErrorAsync(async (req, res, next) => {
+  const { oldPassword, password, confirmPassword } = req.body;
+  const { email, isGoogleSSO } = req.user;
+  const currentUser = await User.findOne({ email }).select('+password');
+  if (!oldPassword || !password || !confirmPassword) {
+    return next(appError(401, '編輯失敗，欄位未填寫正確！'));
+  }
+  if (isGoogleSSO) {
+    return next(appError(401, '此帳號 Google 登入，無法變更密碼'));
+  }
+  const isPasswordMatched = await bcrypt.compare(
+    oldPassword,
+    currentUser.password
+  );
+  if (!isPasswordMatched) {
+    return next(appError(401, '原密碼錯誤，無法變更密碼'));
+  }
+  const errMsgAry = [];
+  if (password !== confirmPassword) {
+    errMsgAry.push('密碼不一致');
+  }
+  if (!validator.isStrongPassword(password, { minSymbols: 0 })) {
+    errMsgAry.push('密碼需大於 8 碼，並包含數字、英文字母大小寫');
+  }
+  if (errMsgAry.length > 0) {
+    return next(appError(401, errMsgAry.join(',')));
+  }
+  let newPassword = await bcrypt.hash(password, 12);
+  const user = await User.findByIdAndUpdate(
+    req.user.id,
+    {
+      password: newPassword
+    },
+    { new: true, runValidators: true }
+  );
+  successHandler(res, '密碼更新成功', user);
+});
+
+module.exports = { getUser, editUser, updatePassword };
