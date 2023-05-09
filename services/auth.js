@@ -30,9 +30,13 @@ const isAuth = handleErrorAsync(async (req, res, next) => {
   req.user = currentUser;
   next();
 });
-const generateSendJWT = (user, statusCode, res) => {
+const generateSendJWT = (user, statusCode, res, isRememberMe = 0) => {
+  const expiresIn =
+    isRememberMe == 1
+      ? process.env.JWT_EXPIRES_DAY_LONG
+      : process.env.JWT_EXPIRES_DAY;
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_DAY
+    expiresIn: expiresIn
   });
   user.password = undefined;
 
