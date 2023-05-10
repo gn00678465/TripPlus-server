@@ -15,5 +15,10 @@ router.patch(
 
 //teams
 router.get('/:projId/team/:teamId', isAdmin, ProjectController.handleReadTeam);
+router.patch(
+  '/:projId/team/:teamId',
+  isAdmin,
+  ProjectController.handleUpdateTeam
+);
 
 module.exports = router;

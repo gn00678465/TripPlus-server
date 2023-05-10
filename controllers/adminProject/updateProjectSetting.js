@@ -38,36 +38,36 @@ const handleUpdateProjectSetting = handleErrorAsync(async (req, res, next) => {
     );
   }
 
-  const errArry = [];
+  const errAray = [];
   // isNumber
   if (!validator.isInt(target.toString())) {
-    errArry.push('目標金額應為整數數值');
+    errArray.push('目標金額應為整數數值');
   }
 
   if (!validator.isIn(category.toString(), ['0', '1', '2'])) {
-    errArry.push('“專案類型”格式不正確，請聯絡管理員');
+    errArray.push('“專案類型”格式不正確，請聯絡管理員');
   }
 
   //is date & time
   if (!validator.isISO8601(startTime) || !validator.isISO8601(endTime)) {
-    errArry.push('募資開始時間或募資結束時間格式不正確');
+    errArray.push('募資開始時間或募資結束時間格式不正確');
   }
 
   //募資結束時間 大於 募資開始時間
   if (!validator.isAfter(endTime, { comparisonDate: startTime })) {
-    errArry.push('募資結束時間應晚於募資開始時間');
+    errArray.push('募資結束時間應晚於募資開始時間');
   }
 
   if (isShowTarget && !validator.isIn(isShowTarget.toString(), ['0', '1'])) {
-    errArry.push('“顯示預計募資金額”格式不正確，請聯絡管理員');
+    errArray.push('“顯示預計募資金額”格式不正確，請聯絡管理員');
   }
 
   if (isLimit && !validator.isIn(isLimit.toString(), ['0', '1'])) {
-    errArry.push('“庫存限量標示”格式不正確，請聯絡管理員');
+    errArray.push('“庫存限量標示”格式不正確，請聯絡管理員');
   }
 
   if (isAbled && !validator.isIn(isAbled.toString(), ['0', '1'])) {
-    errArry.push('“是否啓用”格式不正確，請聯絡管理員');
+    errArray.push('“是否啓用”格式不正確，請聯絡管理員');
   }
 
   //is relative url
@@ -81,16 +81,16 @@ const handleUpdateProjectSetting = handleErrorAsync(async (req, res, next) => {
       require_valid_protocal: false
     })
   ) {
-    errArry.push('url 格式錯誤');
+    errArray.push('url 格式錯誤');
   }
 
   //seo max length 150
   if (seoDescription && !validator.isLength(seoDescription, { max: 150 })) {
-    errArry.push('seo描述最多150字');
+    errArray.push('seo描述最多150字');
   }
 
-  if (errArry.length > 0) {
-    return next(appError(400, errArry.join('&')));
+  if (errArray.length > 0) {
+    return next(appError(400, errArray.join('&')));
   }
 
   const updatedProject = await Project.findByIdAndUpdate(
