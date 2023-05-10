@@ -89,7 +89,7 @@ const handleUpdateTeam = handleErrorAsync(async (req, res, next) => {
 
   const updatedTeam = await Team.findByIdAndUpdate(teamId, req.body);
   if (!updatedTeam) {
-    return next(appError(500, '編輯團隊資料錯誤'));
+    return next(appError(500, '編輯團隊資料失敗'));
   }
 
   const newTeam = await Team.findById(teamId);

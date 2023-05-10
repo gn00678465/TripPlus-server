@@ -23,28 +23,28 @@ const handleCreateProject = handleErrorAsync(async (req, res, next) => {
     );
   }
 
-  const errArry = [];
+  const errArray = [];
   // isNumber
-  if (!validator.isInt(target.toString())) {
-    errArry.push('目標金額應為整數數值');
+  if (!validator.isInt(target.toString(), { gt: 0 })) {
+    errArray.push('目標金額應為大於 0 的整數數值');
   }
 
   if (!validator.isIn(category.toString(), ['0', '1', '2'])) {
-    errArry.push('“專案類型”格式不正確，請聯絡管理員');
+    errArray.push('“專案類型”格式不正確，請聯絡管理員');
   }
 
   //is date & time
   if (!validator.isISO8601(startTime) || !validator.isISO8601(endTime)) {
-    errArry.push('募資開始時間或募資結束時間格式不正確');
+    errArray.push('募資開始時間或募資結束時間格式不正確');
   }
 
   //募資結束時間 大於 募資開始時間
   if (!validator.isAfter(endTime, { comparisonDate: startTime })) {
-    errArry.push('募資結束時間應晚於募資開始時間');
+    errArray.push('募資結束時間應晚於募資開始時間');
   }
 
-  if (errArry.length > 0) {
-    return next(appError(400, errArry.join('&')));
+  if (errArray.length > 0) {
+    return next(appError(400, errArray.join('&')));
   }
 
   const newTeam = await Team.create({

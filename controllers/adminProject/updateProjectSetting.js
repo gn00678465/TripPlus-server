@@ -40,8 +40,8 @@ const handleUpdateProjectSetting = handleErrorAsync(async (req, res, next) => {
 
   const errAray = [];
   // isNumber
-  if (!validator.isInt(target.toString())) {
-    errArray.push('目標金額應為整數數值');
+  if (!validator.isInt(target.toString(), { gt: 0 })) {
+    errArray.push('目標金額應為大於 0 的整數數值');
   }
 
   if (!validator.isIn(category.toString(), ['0', '1', '2'])) {
@@ -100,7 +100,7 @@ const handleUpdateProjectSetting = handleErrorAsync(async (req, res, next) => {
 
   if (!updatedProject) {
     //updatedProject 會是舊資料
-    return next(appError(500, '編輯專案資料失敗'));
+    return next(appError(500, '編輯專案基本資料失敗'));
   }
 
   const newProject = await Project.findById(req.params.id);
