@@ -12,6 +12,11 @@ router.patch(
   isAdmin,
   ProjectController.handleUpdateProjectSetting
 );
+router.patch(
+  '/:id/info/image',
+  isAdmin,
+  ProjectController.handleUpdateProjectImage
+);
 
 //teams
 router.get('/:projId/team/:teamId', isAdmin, ProjectController.handleReadTeam);
