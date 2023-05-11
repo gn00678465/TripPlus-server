@@ -56,5 +56,10 @@ router.delete(
   isAdmin,
   ProjectController.handleDeleteProjectPlan
 );
+router.delete(
+  '/:projId/news/:newsId',
+  isAdmin,
+  ProjectController.handleDeleteProjectNews
+);
 
 module.exports = router;
