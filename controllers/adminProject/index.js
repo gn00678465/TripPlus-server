@@ -1,6 +1,7 @@
 const handleCreateProject = require('./createProject');
 const handleCreateProjectPlan = require('./createProjectPlan');
 const handleCreateProjectNews = require('./createProjectNews');
+const handleCreateProjectFaqs = require('./createProjectFaqs');
 const handleReadProject = require('./readProject');
 const handleReadTeam = require('./readTeam');
 const handleReadProjectContent = require('./readProjectContent');
@@ -19,6 +20,7 @@ const handleDeleteProjectNews = require('./deleteProjectNews');
 module.exports.handleCreateProject = handleCreateProject;
 module.exports.handleCreateProjectPlan = handleCreateProjectPlan;
 module.exports.handleCreateProjectNews = handleCreateProjectNews;
+module.exports.handleCreateProjectFaqs = handleCreateProjectFaqs;
 module.exports.handleReadProject = handleReadProject;
 module.exports.handleReadTeam = handleReadTeam;
 module.exports.handleReadProjectContent = handleReadProjectContent;
