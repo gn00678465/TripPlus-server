@@ -7,6 +7,7 @@ const handleUpdateProjectSetting = require('./updateProjectSetting');
 const handleUpdateProjectImage = require('./updateProjectImage');
 const handleUpdateProjectPayment = require('./updateProjectPayment');
 const handleUpdateProjectContent = require('./updateProjectContent');
+const handleUpdateProjectPlan = require('./updateProjectPlan');
 const handleReadTeam = require('./readTeam');
 const handleUpdateTeam = require('./updateProjectTeam');
 
@@ -19,5 +20,6 @@ module.exports.handleUpdateProjectSetting = handleUpdateProjectSetting;
 module.exports.handleUpdateProjectImage = handleUpdateProjectImage;
 module.exports.handleUpdateProjectPayment = handleUpdateProjectPayment;
 module.exports.handleUpdateProjectContent = handleUpdateProjectContent;
+module.exports.handleUpdateProjectPlan = handleUpdateProjectPlan;
 module.exports.handleReadTeam = handleReadTeam;
 module.exports.handleUpdateTeam = handleUpdateTeam;
