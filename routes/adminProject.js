@@ -44,4 +44,10 @@ router.patch(
   ProjectController.handleUpdateProjectPlan
 );
 
+router.delete(
+  '/:projId/plan/:planId',
+  isAdmin,
+  ProjectController.handleDeleteProjectPlan
+);
+
 module.exports = router;
