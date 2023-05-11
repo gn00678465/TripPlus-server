@@ -10,7 +10,7 @@ const Plan = require('../../models/plansModel');
 
 const handleUpdateProjectPlan = handleErrorAsync(async (req, res, next) => {
   const { projId, planId } = req.params;
-  const { title, price, content, isPublish, isAllowMulti } = req.body;
+  const { title, price, content, isAllowMulti } = req.body;
   if (!projId || !planId) {
     return next(appError(400, '路由資訊錯誤'));
   }
@@ -37,15 +37,6 @@ const handleUpdateProjectPlan = handleErrorAsync(async (req, res, next) => {
 
   if (!validator.isInt(price.toString(), { gt: 0 })) {
     return next(appError(400, '價格需為大於 0 的整數數值'));
-  }
-
-  if (
-    !(isPublish === 0 ? '0' : isPublish) ||
-    !validator.isIn(isPublish.toString(), ['0', '1'])
-  ) {
-    return next(
-      appError(400, '無填寫“是否發佈”，或是欄位格式錯誤，請聯絡管理員')
-    );
   }
 
   if (
