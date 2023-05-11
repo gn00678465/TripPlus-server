@@ -10,6 +10,7 @@ router.post('/:id/plan', isAdmin, ProjectController.handleCreateProjectPlan);
 
 router.get('/:id/info', isAdmin, ProjectController.handleReadProject);
 router.get('/:id/content', isAdmin, ProjectController.handleReadProjectContent);
+router.get('/:id/plan', isAdmin, ProjectController.handleReadProjectPlan);
 
 router.patch(
   '/:id/info/settings',
