@@ -1,5 +1,3 @@
-const validator = require('validator');
-
 const successHandler = require('../../services/successHandler');
 
 const appError = require('../../services/appError');

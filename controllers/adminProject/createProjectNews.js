@@ -32,10 +32,15 @@ const handleCreateProjectNews = handleErrorAsync(async (req, res, next) => {
       appError(400, '無“是否發佈”資料，或是資料格式錯誤，請聯絡管理員')
     );
   }
+  let publishedAt = '';
+  if (isPublish === 1) {
+    publishedAt = Date.now();
+  }
 
   const newNews = await News.create({
     ...req.body,
-    projectId: req.params.id
+    projectId: req.params.id,
+    publishedAt
   });
 
   if (!newNews) {
