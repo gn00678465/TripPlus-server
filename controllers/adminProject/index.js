@@ -1,0 +1,19 @@
+const handleCreateProject = require('./createProject');
+const handleReadProject = require('./readProject');
+const handleReadProjectContent = require('./readProjectContent');
+const handleUpdateProjectSetting = require('./updateProjectSetting');
+const handleUpdateProjectImage = require('./updateProjectImage');
+const handleUpdateProjectPayment = require('./updateProjectPayment');
+const handleUpdateProjectContent = require('./updateProjectContent');
+const handleReadTeam = require('./readTeam');
+const handleUpdateTeam = require('./updateProjectTeam');
+
+module.exports.handleCreateProject = handleCreateProject;
+module.exports.handleReadProject = handleReadProject;
+module.exports.handleReadProjectContent = handleReadProjectContent;
+module.exports.handleUpdateProjectSetting = handleUpdateProjectSetting;
+module.exports.handleUpdateProjectImage = handleUpdateProjectImage;
+module.exports.handleUpdateProjectPayment = handleUpdateProjectPayment;
+module.exports.handleUpdateProjectContent = handleUpdateProjectContent;
+module.exports.handleReadTeam = handleReadTeam;
+module.exports.handleUpdateTeam = handleUpdateTeam;
