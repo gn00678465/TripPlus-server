@@ -5,6 +5,7 @@ const successHandler = require('../../services/successHandler');
 const appError = require('../../services/appError');
 const handleErrorAsync = require('../../services/handleErrorAsync');
 
+const Project = require('../../models/projectsModel');
 const Plan = require('../../models/plansModel');
 
 const handleCreateProjectPlan = handleErrorAsync(async (req, res, next) => {
@@ -12,6 +13,11 @@ const handleCreateProjectPlan = handleErrorAsync(async (req, res, next) => {
 
   if (!req.params.id) {
     return next(appError(400, '路由資訊錯誤'));
+  }
+
+  const proj = await Project.findById(req.params.id);
+  if (!proj) {
+    return next(appError(400, '查無專案'));
   }
 
   if (!title || !(price === 0 ? '0' : price) || !content) {

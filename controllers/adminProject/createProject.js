@@ -11,7 +11,6 @@ const Team = require('../../models/teamsModel');
 const handleCreateProject = handleErrorAsync(async (req, res, next) => {
   const { title, teamName, category, startTime, endTime, target } = req.body;
 
-  console.log(Number(category));
   //必填欄位
   if (
     !title ||
