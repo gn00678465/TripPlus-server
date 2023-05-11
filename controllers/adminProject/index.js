@@ -12,6 +12,7 @@ const handleUpdateProjectImage = require('./updateProjectImage');
 const handleUpdateProjectPayment = require('./updateProjectPayment');
 const handleUpdateProjectContent = require('./updateProjectContent');
 const handleUpdateProjectPlan = require('./updateProjectPlan');
+const handleUpdateProjectNews = require('./updateProjectNews');
 const handleDeleteProjectPlan = require('./deleteProjectPlan');
 
 module.exports.handleCreateProject = handleCreateProject;
@@ -28,4 +29,5 @@ module.exports.handleUpdateProjectImage = handleUpdateProjectImage;
 module.exports.handleUpdateProjectPayment = handleUpdateProjectPayment;
 module.exports.handleUpdateProjectContent = handleUpdateProjectContent;
 module.exports.handleUpdateProjectPlan = handleUpdateProjectPlan;
+module.exports.handleUpdateProjectNews = handleUpdateProjectNews;
 module.exports.handleDeleteProjectPlan = handleDeleteProjectPlan;
