@@ -29,7 +29,7 @@ const handleCreateProjectPlan = handleErrorAsync(async (req, res, next) => {
   }
 
   if (
-    !(isPublish === 0 ?? '0') ||
+    !(isPublish === 0 ? '0' : isPublish) ||
     !validator.isIn(isPublish.toString(), ['0', '1'])
   ) {
     return next(

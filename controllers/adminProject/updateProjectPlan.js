@@ -24,11 +24,11 @@ const handleUpdateProjectPlan = handleErrorAsync(async (req, res, next) => {
   if (!plan) {
     return next(appError(400, '查無回饋方案'));
   }
-  if (plan.isDelete == 1) {
-    return next(appError(400, '該回饋方案已刪除'));
-  }
   if (plan.projectId.toString() !== projId) {
     return next(appError(400, '專案或回饋方案資訊錯誤'));
+  }
+  if (plan.isDelete == 1) {
+    return next(appError(400, '該回饋方案已刪除'));
   }
 
   if (!title || !(price === 0 ? '0' : price) || !content) {
