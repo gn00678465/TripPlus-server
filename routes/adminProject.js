@@ -52,6 +52,11 @@ router.patch(
   isAdmin,
   ProjectController.handleUpdateProjectNews
 );
+router.patch(
+  '/:projId/faqs/:faqsId',
+  isAdmin,
+  ProjectController.handleUpdateProjectFaqs
+);
 
 router.delete(
   '/:projId/plan/:planId',
