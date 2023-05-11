@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const successHandler = require('../../services/successHandler');
 
 const appError = require('../../services/appError');

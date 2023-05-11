@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { isAuth, generateSendJWT, isAdmin } = require('../services/auth');
+const { isAdmin } = require('../services/auth');
 
 const ProjectController = require('../controllers/adminProject');
 

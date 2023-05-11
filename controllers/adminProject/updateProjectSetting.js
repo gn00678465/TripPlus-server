@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-
 const validator = require('validator');
 
 const successHandler = require('../../services/successHandler');
@@ -38,7 +36,7 @@ const handleUpdateProjectSetting = handleErrorAsync(async (req, res, next) => {
     );
   }
 
-  const errAray = [];
+  const errArray = [];
   // isNumber
   if (!validator.isInt(target.toString(), { gt: 0 })) {
     errArray.push('目標金額應為大於 0 的整數數值');
