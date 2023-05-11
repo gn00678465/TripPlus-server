@@ -47,7 +47,10 @@ const handleUpdateTeam = handleErrorAsync(async (req, res, next) => {
     errArray.push('提案者名稱為必填欄位');
   }
 
-  if (type && !validator.isIn(type.toString(), ['0', '1'])) {
+  if (
+    (type === 0 ? '0' : type) &&
+    !validator.isIn(type.toString(), ['0', '1'])
+  ) {
     errArray.push('“提案者類型”格式錯誤，請聯絡管理員');
   }
 

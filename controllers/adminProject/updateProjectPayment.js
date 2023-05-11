@@ -15,23 +15,32 @@ const handleUpdateProjectPayment = handleErrorAsync(async (req, res, next) => {
   }
 
   const errArray = [];
-  if (payment && !validator.isIn(payment.toString(), ['0', '1'])) {
+  if (
+    (payment === 0 ? '0' : payment) &&
+    !validator.isIn(payment.toString(), ['0', '1'])
+  ) {
     errArray.push('“付款方式”資料格式錯誤，請聯絡管理員');
   }
 
   if (
-    isAllowInstallment &&
+    (isAllowInstallment === 0 ? '0' : isAllowInstallment) &&
     !validator.isIn(isAllowInstallment.toString(), ['0', '1'])
   ) {
     errArray.push('“開啓分期付款”資料格式錯誤，請聯絡管理員');
   }
 
-  if (atmDeadline && !validator.isInt(atmDeadline.toString(), { gt: 0 })) {
-    errArray.push('ATM 付款期限應爲大於 0 的數值');
+  if (
+    (atmDeadline === 0 ? '0' : atmDeadline) &&
+    !validator.isInt(atmDeadline.toString(), { gt: 0 })
+  ) {
+    errArray.push('ATM 付款期限應爲大於 0 的整數數值');
   }
 
-  if (csDeadline && !validator.isInt(csDeadline.toString(), { gt: 0 })) {
-    errArray.push('超商付款期限應爲大於 0 的數值');
+  if (
+    (csDeadline === 0 ? '0' : csDeadline) &&
+    !validator.isInt(csDeadline.toString(), { gt: 0 })
+  ) {
+    errArray.push('超商付款期限應爲大於 0 的證書數值');
   }
 
   if (errArray.length > 0) {

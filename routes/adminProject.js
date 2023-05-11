@@ -6,12 +6,22 @@ const { isAdmin } = require('../services/auth');
 const ProjectController = require('../controllers/adminProject');
 
 router.post('/', isAdmin, ProjectController.handleCreateProject);
+router.post('/:id/plan', isAdmin, ProjectController.handleCreateProjectPlan);
+
+router.get('/:projId/team/:teamId', isAdmin, ProjectController.handleReadTeam);
 router.get('/:id/info', isAdmin, ProjectController.handleReadProject);
 router.get('/:id/content', isAdmin, ProjectController.handleReadProjectContent);
+router.get('/:id/plan', isAdmin, ProjectController.handleReadProjectPlan);
+
 router.patch(
   '/:id/info/settings',
   isAdmin,
   ProjectController.handleUpdateProjectSetting
+);
+router.patch(
+  '/:projId/team/:teamId',
+  isAdmin,
+  ProjectController.handleUpdateTeam
 );
 router.patch(
   '/:id/info/image',
@@ -28,13 +38,16 @@ router.patch(
   isAdmin,
   ProjectController.handleUpdateProjectContent
 );
-
-//teams
-router.get('/:projId/team/:teamId', isAdmin, ProjectController.handleReadTeam);
 router.patch(
-  '/:projId/team/:teamId',
+  '/:projId/plan/:planId',
   isAdmin,
-  ProjectController.handleUpdateTeam
+  ProjectController.handleUpdateProjectPlan
+);
+
+router.delete(
+  '/:projId/plan/:planId',
+  isAdmin,
+  ProjectController.handleDeleteProjectPlan
 );
 
 module.exports = router;

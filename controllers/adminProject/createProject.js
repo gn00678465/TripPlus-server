@@ -9,10 +9,18 @@ const Project = require('../../models/projectsModel');
 const Team = require('../../models/teamsModel');
 
 const handleCreateProject = handleErrorAsync(async (req, res, next) => {
-  const { title, teamName, category, startTime, endTime, target } = req.body;
+  const { title, teamName, category, startTime, endTime, target, keyVision } =
+    req.body;
 
   //必填欄位
-  if (!title || !teamName || !category || !startTime || !endTime || !target) {
+  if (
+    !title ||
+    !teamName ||
+    !(category === 0 ? '0' : category) ||
+    !startTime ||
+    !endTime ||
+    !target
+  ) {
     return next(
       appError(
         400,
@@ -41,6 +49,11 @@ const handleCreateProject = handleErrorAsync(async (req, res, next) => {
     errArray.push('募資結束時間應晚於募資開始時間');
   }
 
+  //主視覺 URL
+  if (keyVision && !validator.isURL(keyVision)) {
+    errArray.push('主視覺連結格式錯誤');
+  }
+
   if (errArray.length > 0) {
     return next(appError(400, errArray.join('&')));
   }
@@ -59,7 +72,8 @@ const handleCreateProject = handleErrorAsync(async (req, res, next) => {
     teamId: newTeam._id,
     startTime,
     endTime,
-    target
+    target,
+    keyVision
   });
 
   if (!newProject) {

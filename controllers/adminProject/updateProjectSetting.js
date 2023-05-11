@@ -27,7 +27,13 @@ const handleUpdateProjectSetting = handleErrorAsync(async (req, res, next) => {
   }
 
   //必填欄位
-  if (!title || !category || !startTime || !endTime || !target) {
+  if (
+    !title ||
+    !(category === 0 ? '0' : category) ||
+    !startTime ||
+    !endTime ||
+    !(target === 0 ? '0' : target)
+  ) {
     return next(
       appError(
         400,
@@ -56,15 +62,24 @@ const handleUpdateProjectSetting = handleErrorAsync(async (req, res, next) => {
     errArray.push('募資結束時間應晚於募資開始時間');
   }
 
-  if (isShowTarget && !validator.isIn(isShowTarget.toString(), ['0', '1'])) {
+  if (
+    (isShowTarget === 0 ? '0' : isShowTarget) &&
+    !validator.isIn(isShowTarget.toString(), ['0', '1'])
+  ) {
     errArray.push('“顯示預計募資金額”格式不正確，請聯絡管理員');
   }
 
-  if (isLimit && !validator.isIn(isLimit.toString(), ['0', '1'])) {
+  if (
+    (isLimit === 0 ? '0' : isLimit) &&
+    !validator.isIn(isLimit.toString(), ['0', '1'])
+  ) {
     errArray.push('“庫存限量標示”格式不正確，請聯絡管理員');
   }
 
-  if (isAbled && !validator.isIn(isAbled.toString(), ['0', '1'])) {
+  if (
+    (isAbled === 0 ? '0' : isAbled) &&
+    !validator.isIn(isAbled.toString(), ['0', '1'])
+  ) {
     errArray.push('“是否啓用”格式不正確，請聯絡管理員');
   }
 
