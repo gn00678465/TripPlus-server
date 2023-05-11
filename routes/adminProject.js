@@ -6,8 +6,11 @@ const { isAdmin } = require('../services/auth');
 const ProjectController = require('../controllers/adminProject');
 
 router.post('/', isAdmin, ProjectController.handleCreateProject);
+router.post('/:id/plan', isAdmin, ProjectController.handleCreateProjectPlan);
+
 router.get('/:id/info', isAdmin, ProjectController.handleReadProject);
 router.get('/:id/content', isAdmin, ProjectController.handleReadProjectContent);
+
 router.patch(
   '/:id/info/settings',
   isAdmin,
