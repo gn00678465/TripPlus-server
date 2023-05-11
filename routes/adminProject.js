@@ -13,6 +13,7 @@ router.get('/:projId/team/:teamId', isAdmin, ProjectController.handleReadTeam);
 router.get('/:id/info', isAdmin, ProjectController.handleReadProject);
 router.get('/:id/content', isAdmin, ProjectController.handleReadProjectContent);
 router.get('/:id/plan', isAdmin, ProjectController.handleReadProjectPlan);
+router.get('/:id/news', isAdmin, ProjectController.handleReadProjectNews);
 
 router.patch(
   '/:id/info/settings',
