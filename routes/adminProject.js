@@ -7,6 +7,7 @@ const ProjectController = require('../controllers/adminProject');
 
 router.post('/', isAdmin, ProjectController.handleCreateProject);
 router.post('/:id/plan', isAdmin, ProjectController.handleCreateProjectPlan);
+router.post('/:id/news', isAdmin, ProjectController.handleCreateProjectNews);
 
 router.get('/:projId/team/:teamId', isAdmin, ProjectController.handleReadTeam);
 router.get('/:id/info', isAdmin, ProjectController.handleReadProject);

@@ -1,5 +1,6 @@
 const handleCreateProject = require('./createProject');
 const handleCreateProjectPlan = require('./createProjectPlan');
+const handleCreateProjectNews = require('./createProjectNews');
 const handleReadProject = require('./readProject');
 const handleReadTeam = require('./readTeam');
 const handleReadProjectContent = require('./readProjectContent');
@@ -14,6 +15,7 @@ const handleDeleteProjectPlan = require('./deleteProjectPlan');
 
 module.exports.handleCreateProject = handleCreateProject;
 module.exports.handleCreateProjectPlan = handleCreateProjectPlan;
+module.exports.handleCreateProjectNews = handleCreateProjectNews;
 module.exports.handleReadProject = handleReadProject;
 module.exports.handleReadTeam = handleReadTeam;
 module.exports.handleReadProjectContent = handleReadProjectContent;
