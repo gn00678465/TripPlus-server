@@ -7,11 +7,15 @@ const ProjectController = require('../controllers/adminProject');
 
 router.post('/', isAdmin, ProjectController.handleCreateProject);
 router.post('/:id/plan', isAdmin, ProjectController.handleCreateProjectPlan);
+router.post('/:id/news', isAdmin, ProjectController.handleCreateProjectNews);
+router.post('/:id/faqs', isAdmin, ProjectController.handleCreateProjectFaqs);
 
 router.get('/:projId/team/:teamId', isAdmin, ProjectController.handleReadTeam);
 router.get('/:id/info', isAdmin, ProjectController.handleReadProject);
 router.get('/:id/content', isAdmin, ProjectController.handleReadProjectContent);
 router.get('/:id/plan', isAdmin, ProjectController.handleReadProjectPlan);
+router.get('/:id/news', isAdmin, ProjectController.handleReadProjectNews);
+router.get('/:id/faqs', isAdmin, ProjectController.handleReadProjectFaqs);
 
 router.patch(
   '/:id/info/settings',
@@ -43,11 +47,31 @@ router.patch(
   isAdmin,
   ProjectController.handleUpdateProjectPlan
 );
+router.patch(
+  '/:projId/news/:newsId',
+  isAdmin,
+  ProjectController.handleUpdateProjectNews
+);
+router.patch(
+  '/:projId/faqs/:faqsId',
+  isAdmin,
+  ProjectController.handleUpdateProjectFaqs
+);
 
 router.delete(
   '/:projId/plan/:planId',
   isAdmin,
   ProjectController.handleDeleteProjectPlan
+);
+router.delete(
+  '/:projId/news/:newsId',
+  isAdmin,
+  ProjectController.handleDeleteProjectNews
+);
+router.delete(
+  '/:projId/faqs/:faqsId',
+  isAdmin,
+  ProjectController.handleDeleteProjectFaqs
 );
 
 module.exports = router;

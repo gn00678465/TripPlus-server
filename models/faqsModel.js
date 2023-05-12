@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const planSchema = mongoose.Schema(
+const faqsSchema = mongoose.Schema(
   {
     projectId: {
       type: mongoose.Schema.ObjectId,
@@ -21,21 +21,20 @@ const planSchema = mongoose.Schema(
       ],
       ref: 'products'
     },
-    title: {
+    question: {
       type: String,
-      required: [true, '請輸入回饋方案名稱']
+      required: [true, '請輸入問題内容']
     },
-    price: {
-      type: Number,
-      required: [true, '請輸入回饋方案價格']
-    },
-    content: {
+    answer: {
       type: String,
-      required: [true, '請輸入回饋方案内容']
+      required: [true, '請輸入回答内容']
     },
-    isAllowMulti: {
+    isPublish: {
       type: Number,
-      default: 1
+      required: [true, '請選擇是否發佈']
+    },
+    publishedAt: {
+      type: Date
     },
     isDelete: {
       type: Number,
@@ -47,5 +46,5 @@ const planSchema = mongoose.Schema(
   }
 );
 
-const Plan = mongoose.model('plans', planSchema);
-module.exports = Plan;
+const Faqs = mongoose.model('faqs', faqsSchema);
+module.exports = Faqs;
