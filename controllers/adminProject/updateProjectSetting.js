@@ -98,8 +98,8 @@ const handleUpdateProjectSetting = handleErrorAsync(async (req, res, next) => {
   }
 
   //seo max length 150
-  if (seoDescription && !validator.isLength(seoDescription, { max: 150 })) {
-    errArray.push('seo描述最多150字');
+  if (seoDescription && !validator.isLength(seoDescription, { max: 100 })) {
+    errArray.push('seo描述最多100字');
   }
 
   if (errArray.length > 0) {

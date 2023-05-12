@@ -19,6 +19,7 @@ const handleUpdateProjectFaqs = require('./updateProjectFaqs');
 const handleDeleteProjectPlan = require('./deleteProjectPlan');
 const handleDeleteProjectNews = require('./deleteProjectNews');
 const handleDeleteProjectFaqs = require('./deleteProjectFaqs');
+const handleConvertIntoProduct = require('./convertIntoProduct');
 
 module.exports.handleCreateProject = handleCreateProject;
 module.exports.handleCreateProjectPlan = handleCreateProjectPlan;
@@ -41,3 +42,4 @@ module.exports.handleUpdateProjectFaqs = handleUpdateProjectFaqs;
 module.exports.handleDeleteProjectPlan = handleDeleteProjectPlan;
 module.exports.handleDeleteProjectNews = handleDeleteProjectNews;
 module.exports.handleDeleteProjectFaqs = handleDeleteProjectFaqs;
+module.exports.handleConvertIntoProduct = handleConvertIntoProduct;

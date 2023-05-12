@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const projectSchema = mongoose.Schema(
+const productSchema = mongoose.Schema(
   {
     creator: {
       type: mongoose.Schema.ObjectId,
@@ -15,28 +15,16 @@ const projectSchema = mongoose.Schema(
       required: true,
       ref: 'teams'
     },
-    startTime: {
-      type: Date,
-      required: [true, '請輸入專案開始時間']
-    },
-    endTime: {
-      type: Date,
-      required: [true, '請輸入專案結束時間']
-    },
-    target: {
-      type: Number,
-      required: [true, '請輸入目標金額']
-    },
     category: {
       type: Number,
       required: [true, '請選擇專案類型'],
-      default: 1
+      default: 2
     },
     sum: {
       type: Number,
       default: 0
     },
-    sponsorCount: {
+    buyerCount: {
       type: Number,
       default: 0
     },
@@ -49,9 +37,20 @@ const projectSchema = mongoose.Schema(
     summary: {
       type: String
     },
-    isShowTarget: {
-      type: Number,
-      default: 1
+    price: {
+      type: Number
+    },
+    location: {
+      type: String
+    },
+    material: {
+      type: String
+    },
+    size: {
+      type: String
+    },
+    weight: {
+      type: String
     },
     url: {
       type: String
@@ -83,20 +82,24 @@ const projectSchema = mongoose.Schema(
     content: {
       type: String
     },
-    isCommercialized: {
+    isSelected: {
       type: Number,
       default: 0
-    },
-    productId: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'products'
     }
   },
   {
-    timestamps: true
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
   }
 );
 
-const Project = mongoose.model('projects', projectSchema);
+productSchema.virtual('faqs', {
+  ref: 'faqs',
+  foreignField: 'productId',
+  localField: '_id'
+});
 
-module.exports = Project;
+const Products = mongoose.model('products', productSchema);
+
+module.exports = Products;
