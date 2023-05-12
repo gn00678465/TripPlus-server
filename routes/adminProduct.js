@@ -8,5 +8,10 @@ router.get(
   isAdmin,
   productController.getProduct
 );
+router.patch(
+  '/admin/product/:productId/info/image',
+  isAdmin,
+  productController.editProductImage
+);
 
 module.exports = router;
