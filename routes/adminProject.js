@@ -20,6 +20,7 @@ router.post(
   ProjectController.handleCreateProjectHistory
 );
 
+router.get('/', isAdmin, ProjectController.handleReadAdminProject);
 router.get('/:projId/team/:teamId', isAdmin, ProjectController.handleReadTeam);
 router.get('/:id/info', isAdmin, ProjectController.handleReadProject);
 router.get('/:id/content', isAdmin, ProjectController.handleReadProjectContent);
