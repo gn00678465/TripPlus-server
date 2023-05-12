@@ -44,7 +44,7 @@ app.use('/user', usersRouter);
 app.use('/auth', authRouter);
 app.use('/upload', uploadRouter);
 app.use('/admin/project', projectRouter);
-app.use(productRouter);
+app.use('/admin/product', productRouter);
 
 // 404 Not Found
 app.use(function (req, res, next) {
