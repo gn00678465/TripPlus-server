@@ -9,6 +9,11 @@ router.post('/', isAdmin, ProjectController.handleCreateProject);
 router.post('/:id/plan', isAdmin, ProjectController.handleCreateProjectPlan);
 router.post('/:id/news', isAdmin, ProjectController.handleCreateProjectNews);
 router.post('/:id/faqs', isAdmin, ProjectController.handleCreateProjectFaqs);
+router.post(
+  '/:id/transform',
+  isAdmin,
+  ProjectController.handleConvertIntoProduct
+);
 
 router.get('/:projId/team/:teamId', isAdmin, ProjectController.handleReadTeam);
 router.get('/:id/info', isAdmin, ProjectController.handleReadProject);
