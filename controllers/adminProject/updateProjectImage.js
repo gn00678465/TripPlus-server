@@ -19,7 +19,7 @@ const handleUpdateProjectImage = handleErrorAsync(async (req, res, next) => {
     errArray.push('主視覺連結錯誤');
   }
 
-  if (keyVision && !validator.isURL(video)) {
+  if (video && !validator.isURL(video)) {
     errArray.push('集資影片連結錯誤');
   }
 
