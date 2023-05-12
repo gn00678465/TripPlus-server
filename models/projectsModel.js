@@ -3,7 +3,8 @@ const projectSchema = mongoose.Schema(
   {
     creator: {
       type: mongoose.Schema.ObjectId,
-      required: true
+      required: true,
+      ref: 'users'
     },
     title: {
       type: String,
@@ -11,7 +12,8 @@ const projectSchema = mongoose.Schema(
     },
     teamId: {
       type: mongoose.Schema.ObjectId,
-      required: true
+      required: true,
+      ref: 'teams'
     },
     startTime: {
       type: Date,

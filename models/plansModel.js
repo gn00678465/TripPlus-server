@@ -8,7 +8,8 @@ const planSchema = mongoose.Schema(
           return !this.productId;
         },
         '請填寫 projectId 或 productId'
-      ]
+      ],
+      ref: 'projects'
     },
     productId: {
       type: mongoose.Schema.ObjectId,
@@ -17,7 +18,8 @@ const planSchema = mongoose.Schema(
           return !this.projectId;
         },
         '請填寫 projectId 或 productId'
-      ]
+      ],
+      ref: 'products'
     },
     title: {
       type: String,

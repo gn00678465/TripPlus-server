@@ -3,7 +3,8 @@ const newsSchema = mongoose.Schema(
   {
     projectId: {
       type: mongoose.Schema.ObjectId,
-      required: true
+      required: true,
+      ref: 'projects'
     },
     title: {
       type: String,
