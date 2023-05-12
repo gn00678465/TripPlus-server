@@ -62,7 +62,7 @@ const projectSchema = mongoose.Schema(
     },
     seoDescription: {
       type: String,
-      maxLength: 150
+      maxLength: 100
     },
     isAbled: {
       type: Number,
@@ -88,7 +88,8 @@ const projectSchema = mongoose.Schema(
       default: 0
     },
     productId: {
-      type: mongoose.Schema.ObjectId
+      type: mongoose.Schema.ObjectId,
+      ref: 'products'
     }
   },
   {
