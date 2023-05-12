@@ -13,5 +13,10 @@ router.patch(
   isAdmin,
   productController.editProductImage
 );
+router.patch(
+  '/admin/product/:productId/info/setting',
+  isAdmin,
+  productController.editProductSetting
+);
 
 module.exports = router;
