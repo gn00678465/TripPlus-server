@@ -93,9 +93,17 @@ const projectSchema = mongoose.Schema(
     }
   },
   {
-    timestamps: true
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
   }
 );
+
+projectSchema.virtual('histories', {
+  ref: 'histories',
+  foreignField: 'projectId',
+  localField: '_id'
+});
 
 const Project = mongoose.model('projects', projectSchema);
 

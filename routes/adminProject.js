@@ -14,13 +14,24 @@ router.post(
   isAdmin,
   ProjectController.handleConvertIntoProduct
 );
+router.post(
+  '/:id/update-history',
+  isAdmin,
+  ProjectController.handleCreateProjectHistory
+);
 
+router.get('/', isAdmin, ProjectController.handleReadAdminProject);
 router.get('/:projId/team/:teamId', isAdmin, ProjectController.handleReadTeam);
 router.get('/:id/info', isAdmin, ProjectController.handleReadProject);
 router.get('/:id/content', isAdmin, ProjectController.handleReadProjectContent);
 router.get('/:id/plan', isAdmin, ProjectController.handleReadProjectPlan);
 router.get('/:id/news', isAdmin, ProjectController.handleReadProjectNews);
 router.get('/:id/faqs', isAdmin, ProjectController.handleReadProjectFaqs);
+router.get(
+  '/:id/update-history',
+  isAdmin,
+  ProjectController.handleReadProjectHistory
+);
 
 router.patch(
   '/:id/info/settings',
