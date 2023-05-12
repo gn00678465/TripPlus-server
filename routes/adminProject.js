@@ -14,6 +14,11 @@ router.post(
   isAdmin,
   ProjectController.handleConvertIntoProduct
 );
+router.post(
+  '/:id/update-history',
+  isAdmin,
+  ProjectController.handleCreateProjectHistory
+);
 
 router.get('/:projId/team/:teamId', isAdmin, ProjectController.handleReadTeam);
 router.get('/:id/info', isAdmin, ProjectController.handleReadProject);
