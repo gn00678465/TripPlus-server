@@ -77,7 +77,7 @@ const editProductSetting = handleErrorAsync(async (req, res, next) => {
     (isAbled === 0 ? '0' : isAbled) &&
     !validator.isIn(isAbled.toString(), ['0', '1'])
   ) {
-    errMsgAry.push('是否啓格式不正確');
+    errMsgAry.push('是否啓用格式不正確');
   }
   if (
     url &&
