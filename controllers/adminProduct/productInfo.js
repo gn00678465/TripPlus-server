@@ -110,4 +110,53 @@ const editProductSetting = handleErrorAsync(async (req, res, next) => {
 
   successHandler(res, '編輯商品基本資料成功', product);
 });
-module.exports = { getProduct, editProductImage, editProductSetting };
+const editProductPayment = handleErrorAsync(async (req, res, next) => {
+  const { payment, isAllowInstallment, atmDeadline, csDeadline } = req.body;
+  if (!req.params.productId) {
+    return next(appError(400, '路由資訊錯誤'));
+  }
+  const errMsgAry = [];
+  if (
+    (payment === 0 ? '0' : payment) &&
+    !validator.isIn(payment.toString(), ['0', '1'])
+  ) {
+    errMsgAry.push('付款方式格式錯誤，請聯絡管理員');
+  }
+  if (
+    (isAllowInstallment === 0 ? '0' : isAllowInstallment) &&
+    !validator.isIn(isAllowInstallment.toString(), ['0', '1'])
+  ) {
+    errMsgAry.push('開啓分期付款格式錯誤，請聯絡管理員');
+  }
+  if (
+    (atmDeadline === 0 ? '0' : atmDeadline) &&
+    !validator.isInt(atmDeadline.toString(), { gt: 0 })
+  ) {
+    errMsgAry.push('ATM 付款期限應爲大於 0 的整數數值');
+  }
+  if (
+    (csDeadline === 0 ? '0' : csDeadline) &&
+    !validator.isInt(csDeadline.toString(), { gt: 0 })
+  ) {
+    errMsgAry.push('超商付款期限應爲大於 0 的整數數值');
+  }
+  if (errMsgAry.length > 0) {
+    return next(appError(400, errMsgAry.join('&')));
+  }
+  const updatePayment = await Product.findByIdAndUpdate(
+    req.params.productId,
+    req.body
+  );
+  if (!updatePayment) {
+    return next(appError(500, '編輯付款資料失敗'));
+  }
+  const product = await Product.findById(req.params.productId);
+
+  successHandler(res, '編輯付款資料成功', product);
+});
+module.exports = {
+  getProduct,
+  editProductImage,
+  editProductSetting,
+  editProductPayment
+};

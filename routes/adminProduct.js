@@ -14,5 +14,10 @@ router.patch(
   isAdmin,
   productController.editProductSetting
 );
+router.patch(
+  '/:productId/info/payment',
+  isAdmin,
+  productController.editProductPayment
+);
 
 module.exports = router;
