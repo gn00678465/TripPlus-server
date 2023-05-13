@@ -11,7 +11,7 @@ const editProductContent = handleErrorAsync(async (req, res, next) => {
   if (!product) {
     return next(appError(400, '取得商品内文失敗，查無專案'));
   }
-  successHandler(res, '取得專案内文成功', { content: product.content || '' });
+  successHandler(res, '取得商品内文成功', { content: product.content || '' });
 });
 
 module.exports = editProductContent;
