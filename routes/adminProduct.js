@@ -28,4 +28,9 @@ router.patch(
 router.get('/:productId/team/:teamId', isAdmin, productController.getTeam);
 router.get('/:productId/plan', isAdmin, productController.getProductPlan);
 router.post('/:productId/plan', isAdmin, productController.createProductPlan);
+router.patch(
+  '/:productId/plan/:planId',
+  isAdmin,
+  productController.editProductPlan
+);
 module.exports = router;
