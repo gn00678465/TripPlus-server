@@ -38,4 +38,5 @@ router.delete(
   isAdmin,
   productController.delProductPlan
 );
+router.get('/:productId/faqs', isAdmin, productController.getProductFaqs);
 module.exports = router;
