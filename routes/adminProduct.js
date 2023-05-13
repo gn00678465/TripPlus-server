@@ -33,4 +33,9 @@ router.patch(
   isAdmin,
   productController.editProductPlan
 );
+router.delete(
+  '/:productId/plan/:planId',
+  isAdmin,
+  productController.delProductPlan
+);
 module.exports = router;

@@ -9,7 +9,8 @@ const getTeam = require('./productTeam');
 const {
   getProductPlan,
   createProductPlan,
-  editProductPlan
+  editProductPlan,
+  delProductPlan
 } = require('./productPlan');
 
 module.exports.getProduct = getProduct;
@@ -22,3 +23,4 @@ module.exports.getTeam = getTeam;
 module.exports.getProductPlan = getProductPlan;
 module.exports.createProductPlan = createProductPlan;
 module.exports.editProductPlan = editProductPlan;
+module.exports.delProductPlan = delProductPlan;

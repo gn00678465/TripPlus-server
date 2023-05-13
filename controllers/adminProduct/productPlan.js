@@ -98,5 +98,36 @@ const editProductPlan = handleErrorAsync(async (req, res, next) => {
   const newPlan = await Plan.findById(planId);
   successHandler(res, '編輯回饋方案成功', newPlan);
 });
+const delProductPlan = handleErrorAsync(async (req, res, next) => {
+  const { productId, planId } = req.params;
+  if (!productId || !planId) {
+    return next(appError(400, '路由資訊錯誤'));
+  }
+  const product = await Product.findById(productId);
+  if (!product) {
+    return next(appError(400, '查無專案'));
+  }
+  const plan = await Plan.findById(planId);
+  if (!plan) {
+    return next(appError(400, '查無回饋方案'));
+  }
+  if (plan.productId.toString() !== productId) {
+    return next(appError(400, '商品或回饋方案資訊錯誤'));
+  }
+  if (plan.isDelete == 1) {
+    return next(appError(400, '該回饋方案已刪除'));
+  }
+  const delPlan = await Plan.findByIdAndUpdate(planId, { isDelete: 1 });
+  if (!delPlan) {
+    return next(appError(500, '刪除回饋方案錯誤'));
+  }
+  const newPlan = await Plan.findById(planId);
+  successHandler(res, '刪除回饋方案成功', newPlan);
+});
 
-module.exports = { getProductPlan, createProductPlan, editProductPlan };
+module.exports = {
+  getProductPlan,
+  createProductPlan,
+  editProductPlan,
+  delProductPlan
+};
