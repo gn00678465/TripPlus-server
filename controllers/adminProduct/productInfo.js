@@ -17,7 +17,8 @@ const getProduct = handleErrorAsync(async (req, res, next) => {
 
 const editProductImage = handleErrorAsync(async (req, res, next) => {
   const { keyVision, video } = req.body;
-  if (!req.params.productId) {
+  const { productId } = req.params;
+  if (!productId) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const errMsgAry = [];
@@ -30,15 +31,14 @@ const editProductImage = handleErrorAsync(async (req, res, next) => {
   if (errMsgAry.length > 0) {
     return next(appError(400, errMsgAry.join('&')));
   }
-  const updatedProduct = await Product.findByIdAndUpdate(
-    req.params.productId,
-    req.body,
-    { new: true, runValidators: true }
-  );
+  const updatedProduct = await Product.findByIdAndUpdate(productId, req.body, {
+    new: true,
+    runValidators: true
+  });
   if (!updatedProduct) {
     return next(appError(500, '編輯主視覺資料失敗'));
   }
-  const editImage = await Product.findById(req.params.productId);
+  const editImage = await Product.findById(productId);
   successHandler(res, '編輯主視覺資料成功', editImage);
 });
 const editProductSetting = handleErrorAsync(async (req, res, next) => {
@@ -56,7 +56,8 @@ const editProductSetting = handleErrorAsync(async (req, res, next) => {
     seoDescription,
     isAbled
   } = req.body;
-  if (!req.params.productId) {
+  const { productId } = req.params;
+  if (!productId) {
     return next(appError(400, '路由資訊錯誤'));
   }
   if (!title || !(category === 0 ? '0' : category)) {
@@ -98,10 +99,10 @@ const editProductSetting = handleErrorAsync(async (req, res, next) => {
   if (errMsgAry.length > 0) {
     return next(appError(400, errMsgAry.join('&')));
   }
-  const updatedSetting = await Product.findByIdAndUpdate(
-    req.params.productId,
-    req.body
-  );
+  const updatedSetting = await Product.findByIdAndUpdate(productId, req.body, {
+    new: true,
+    runValidators: true
+  });
 
   if (!updatedSetting) {
     return next(appError(500, '編輯商品基本資料失敗'));
@@ -112,7 +113,8 @@ const editProductSetting = handleErrorAsync(async (req, res, next) => {
 });
 const editProductPayment = handleErrorAsync(async (req, res, next) => {
   const { payment, isAllowInstallment, atmDeadline, csDeadline } = req.body;
-  if (!req.params.productId) {
+  const { productId } = req.params;
+  if (!productId) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const errMsgAry = [];
@@ -143,14 +145,14 @@ const editProductPayment = handleErrorAsync(async (req, res, next) => {
   if (errMsgAry.length > 0) {
     return next(appError(400, errMsgAry.join('&')));
   }
-  const updatePayment = await Product.findByIdAndUpdate(
-    req.params.productId,
-    req.body
-  );
+  const updatePayment = await Product.findByIdAndUpdate(productId, req.body, {
+    new: true,
+    runValidators: true
+  });
   if (!updatePayment) {
     return next(appError(500, '編輯付款資料失敗'));
   }
-  const product = await Product.findById(req.params.productId);
+  const product = await Product.findById(productId);
 
   successHandler(res, '編輯付款資料成功', product);
 });
