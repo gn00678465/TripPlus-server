@@ -13,5 +13,24 @@ const getProductContent = handleErrorAsync(async (req, res, next) => {
   }
   successHandler(res, '取得商品内文成功', { content: product.content || '' });
 });
+const editProductContent = handleErrorAsync(async (req, res, next) => {
+  const { content } = req.body;
+  if (!req.params.productId) {
+    return next(appError(400, '路由資訊錯誤'));
+  }
+  if (!Object.keys(req.body).includes('content')) {
+    return next(appError(400, '無商品内文資訊'));
+  }
+  const updatedContent = await Product.findByIdAndUpdate(req.params.productId, {
+    content
+  });
+  if (!updatedContent) {
+    return next(appError(500, '編輯商品内文失敗'));
+  }
+  const product = await Product.findById(req.params.productId);
+  successHandler(res, '編輯商品内文成功', {
+    content: product.content || ''
+  });
+});
 
-module.exports = getProductContent;
+module.exports = { getProductContent, editProductContent };

@@ -20,4 +20,9 @@ router.patch(
   productController.editProductPayment
 );
 router.get('/:productId/content', isAdmin, productController.getProductContent);
+router.patch(
+  '/:productId/content',
+  isAdmin,
+  productController.editProductContent
+);
 module.exports = router;
