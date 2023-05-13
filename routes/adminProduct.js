@@ -40,4 +40,9 @@ router.delete(
 );
 router.get('/:productId/faqs', isAdmin, productController.getProductFaqs);
 router.post('/:productId/faqs', isAdmin, productController.createProductFaq);
+router.patch(
+  '/:productId/faq/:faqId',
+  isAdmin,
+  productController.editProductFaq
+);
 module.exports = router;

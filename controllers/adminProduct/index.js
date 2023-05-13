@@ -12,7 +12,11 @@ const {
   editProductPlan,
   delProductPlan
 } = require('./productPlan');
-const { getProductFaqs, createProductFaq } = require('./productFaqs');
+const {
+  getProductFaqs,
+  createProductFaq,
+  editProductFaq
+} = require('./productFaqs');
 
 module.exports.getProduct = getProduct;
 module.exports.editProductImage = editProductImage;
@@ -27,3 +31,4 @@ module.exports.editProductPlan = editProductPlan;
 module.exports.delProductPlan = delProductPlan;
 module.exports.getProductFaqs = getProductFaqs;
 module.exports.createProductFaq = createProductFaq;
+module.exports.editProductFaq = editProductFaq;
