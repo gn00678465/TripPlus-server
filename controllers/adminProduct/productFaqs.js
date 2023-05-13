@@ -65,11 +65,11 @@ const editProductFaq = handleErrorAsync(async (req, res, next) => {
   if (!faq) {
     return next(appError(400, '查無常見問題'));
   }
-  if (faq.isDelete == 1) {
-    return next(appError(400, '該常見問題已刪除'));
-  }
   if (faq.productId.toString() !== productId) {
     return next(appError(400, '商品或常見問題資料錯誤'));
+  }
+  if (faq.isDelete == 1) {
+    return next(appError(400, '該常見問題已刪除'));
   }
   if (!question || !answer) {
     return next(appError(400, '問題與回答為必填欄位'));
