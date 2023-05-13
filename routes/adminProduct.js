@@ -25,4 +25,5 @@ router.patch(
   isAdmin,
   productController.editProductContent
 );
+router.get('/:productId/team/:teamId', isAdmin, productController.getTeam);
 module.exports = router;
