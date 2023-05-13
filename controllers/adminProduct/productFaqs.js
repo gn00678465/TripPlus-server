@@ -99,5 +99,43 @@ const editProductFaq = handleErrorAsync(async (req, res, next) => {
   const newFaq = await Faqs.findById(faqId);
   successHandler(res, '編輯常見問題成功', newFaq);
 });
+const delProductFaq = handleErrorAsync(async (req, res, next) => {
+  const { productId, faqId } = req.params;
 
-module.exports = { getProductFaqs, createProductFaq, editProductFaq };
+  if (!productId || !faqId) {
+    return next(appError(400, '路由資訊錯誤'));
+  }
+
+  const product = await Product.findById(productId);
+  if (!product) {
+    return next(appError(400, '查無專案'));
+  }
+
+  const faq = await Faqs.findById(faqId);
+  if (!faq) {
+    return next(appError(400, '查無常見問題'));
+  }
+  if (faq.productId.toString() !== productId) {
+    return next(appError(400, '商品或常見問題資料錯誤'));
+  }
+  if (faq.isDelete === 1) {
+    return next(appError(400, '該常見問題已刪除'));
+  }
+  const delFaq = await Faqs.findByIdAndUpdate(
+    faqId,
+    { isDelete: 1 },
+    { new: true }
+  );
+  if (!delFaq) {
+    return next(appError(500, '刪除常見問題失敗'));
+  }
+  const newFaq = await Faqs.findById(faqId);
+  successHandler(res, '刪除最新消息成功', newFaq);
+});
+
+module.exports = {
+  getProductFaqs,
+  createProductFaq,
+  editProductFaq,
+  delProductFaq
+};

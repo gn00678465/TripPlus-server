@@ -15,7 +15,8 @@ const {
 const {
   getProductFaqs,
   createProductFaq,
-  editProductFaq
+  editProductFaq,
+  delProductFaq
 } = require('./productFaqs');
 
 module.exports.getProduct = getProduct;
@@ -32,3 +33,4 @@ module.exports.delProductPlan = delProductPlan;
 module.exports.getProductFaqs = getProductFaqs;
 module.exports.createProductFaq = createProductFaq;
 module.exports.editProductFaq = editProductFaq;
+module.exports.delProductFaq = delProductFaq;

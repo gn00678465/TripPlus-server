@@ -45,4 +45,9 @@ router.patch(
   isAdmin,
   productController.editProductFaq
 );
+router.delete(
+  '/:productId/faq/:faqId',
+  isAdmin,
+  productController.delProductFaq
+);
 module.exports = router;
