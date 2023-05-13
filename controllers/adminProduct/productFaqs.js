@@ -14,7 +14,7 @@ const getProductFaqs = handleErrorAsync(async (req, res, next) => {
   if (!product) {
     return next(appError(400, '查無商品'));
   }
-  const productFaqs = await Faqs.find({ productId, isDelete: 0 });
+  const productFaqs = await Faqs.find({ productId });
 
   successHandler(res, '取得商品常見問題成功', productFaqs);
 });
