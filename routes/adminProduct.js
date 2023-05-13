@@ -26,7 +26,7 @@ router.patch(
   productController.editProductContent
 );
 router.get('/:productId/team/:teamId', isAdmin, productController.getTeam);
-router.get('/:productId/plan', isAdmin, productController.getProductPlan);
+router.get('/:productId/plans', isAdmin, productController.getProductPlans);
 router.post('/:productId/plan', isAdmin, productController.createProductPlan);
 router.patch(
   '/:productId/plan/:planId',

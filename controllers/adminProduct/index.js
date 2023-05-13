@@ -7,7 +7,7 @@ const {
 const { getProductContent, editProductContent } = require('./productContent');
 const getTeam = require('./productTeam');
 const {
-  getProductPlan,
+  getProductPlans,
   createProductPlan,
   editProductPlan,
   delProductPlan
@@ -26,7 +26,7 @@ module.exports.editProductPayment = editProductPayment;
 module.exports.getProductContent = getProductContent;
 module.exports.editProductContent = editProductContent;
 module.exports.getTeam = getTeam;
-module.exports.getProductPlan = getProductPlan;
+module.exports.getProductPlans = getProductPlans;
 module.exports.createProductPlan = createProductPlan;
 module.exports.editProductPlan = editProductPlan;
 module.exports.delProductPlan = delProductPlan;

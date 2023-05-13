@@ -5,7 +5,7 @@ const handleErrorAsync = require('../../services/handleErrorAsync');
 const Product = require('../../models/productsModel');
 const Plan = require('../../models/plansModel');
 
-const getProductPlan = handleErrorAsync(async (req, res, next) => {
+const getProductPlans = handleErrorAsync(async (req, res, next) => {
   const { productId } = req.params;
   if (!productId) {
     return appError(400, '路由資訊錯誤');
@@ -117,7 +117,11 @@ const delProductPlan = handleErrorAsync(async (req, res, next) => {
   if (plan.isDelete == 1) {
     return next(appError(400, '該回饋方案已刪除'));
   }
-  const delPlan = await Plan.findByIdAndUpdate(planId, { isDelete: 1 });
+  const delPlan = await Plan.findByIdAndUpdate(
+    planId,
+    { isDelete: 1 },
+    { new: true }
+  );
   if (!delPlan) {
     return next(appError(500, '刪除回饋方案錯誤'));
   }
@@ -126,7 +130,7 @@ const delProductPlan = handleErrorAsync(async (req, res, next) => {
 });
 
 module.exports = {
-  getProductPlan,
+  getProductPlans,
   createProductPlan,
   editProductPlan,
   delProductPlan
