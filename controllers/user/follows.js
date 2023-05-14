@@ -48,5 +48,39 @@ const addFollow = handleErrorAsync(async (req, res, next) => {
   }
   successHandler(res, '已加入追蹤', { follows: updatedUserFollow.follows });
 });
+const removeFollow = handleErrorAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const user = await User.findById(req.user.id);
+  const project = await Project.findById(id);
+  const product = await Product.findById(id);
 
-module.exports = { getFollows, addFollow };
+  if (!project && !product) {
+    return next(appError(400, '查無專案或商品'));
+  }
+  const follows = {};
+  if (project) {
+    follows.projectId = project._id;
+  }
+  if (product) {
+    follows.productId = product._id;
+  }
+  const followIndex = user.follows.findIndex((item) =>
+    item.projectId
+      ? item.projectId.equals(follows.projectId)
+      : item.productId.equals(follows.productId)
+  );
+  if (followIndex === -1) {
+    return next(appError(400, '專案或商品未加入追蹤'));
+  }
+  const updatedUserFollow = await User.findByIdAndUpdate(
+    req.user.id,
+    { $pull: { follows } },
+    { new: true }
+  );
+  if (!updatedUserFollow) {
+    return next(appError(500, '取消追蹤失敗'));
+  }
+  successHandler(res, '取消追蹤', { follows: updatedUserFollow.follows });
+});
+
+module.exports = { getFollows, addFollow, removeFollow };
