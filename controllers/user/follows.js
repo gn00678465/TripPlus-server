@@ -5,6 +5,16 @@ const User = require('../../models/usersModel');
 const Project = require('../../models/projectsModel');
 const Product = require('../../models/productsModel');
 
+const getFollows = handleErrorAsync(async (req, res, next) => {
+  const user = await User.findById(req.user.id).populate(
+    'follows.projectId follows.productId'
+  );
+  if (!user) {
+    return next(appError(400, '查無此使用者'));
+  }
+  successHandler(res, '取得追蹤明細成功', { follows: user.follows });
+});
+
 const addFollow = handleErrorAsync(async (req, res, next) => {
   const { id } = req.params;
   const user = await User.findById(req.user.id);
@@ -39,4 +49,4 @@ const addFollow = handleErrorAsync(async (req, res, next) => {
   successHandler(res, '已加入追蹤', { follows: updatedUserFollow.follows });
 });
 
-module.exports = { addFollow };
+module.exports = { getFollows, addFollow };
