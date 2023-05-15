@@ -23,7 +23,7 @@ const handleReadTeam = handleErrorAsync(async (req, res, next) => {
   }
 
   if (!team) {
-    return next(appError(400, '取得團隊資料失敗'));
+    return next(appError(500, '取得團隊資料失敗'));
   }
 
   successHandler(res, '取得團隊資料成功', team);
