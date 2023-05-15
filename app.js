@@ -101,6 +101,12 @@ app.use(function (err, req, res, next) {
     err.isOperational = true;
   }
 
+  if (err.name === 'JsonWebTokenError') {
+    err.statusCode = 500;
+    err.message = 'jwt 資訊錯誤，請聯絡管理員。';
+    err.isOperational = true;
+  }
+
   err.statusCode = err.statusCode || 500;
 
   // dev
