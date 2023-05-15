@@ -29,15 +29,17 @@ const handleDeleteProjectNews = handleErrorAsync(async (req, res, next) => {
     return next(appError(400, '該最新消息已刪除'));
   }
 
-  const deletedNews = await News.findByIdAndUpdate(newsId, { isDelete: 1 });
+  const deletedNews = await News.findByIdAndUpdate(
+    newsId,
+    { $set: { isDelete: 1 } },
+    { new: true }
+  );
 
   if (!deletedNews) {
     return next(appError(500, '刪除最新消息失敗'));
   }
 
-  const newNews = await News.findById(newsId);
-
-  successHandler(res, '刪除最新消息成功', newNews);
+  successHandler(res, '刪除最新消息成功', deletedNews);
 });
 
 module.exports = handleDeleteProjectNews;

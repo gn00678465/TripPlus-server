@@ -27,7 +27,7 @@ const handleUpdateProjectPlan = handleErrorAsync(async (req, res, next) => {
   if (plan.projectId.toString() !== projId) {
     return next(appError(400, '專案或回饋方案資訊錯誤'));
   }
-  if (plan.isDelete == 1) {
+  if (plan.isDelete) {
     return next(appError(400, '該回饋方案已刪除'));
   }
 
@@ -46,13 +46,14 @@ const handleUpdateProjectPlan = handleErrorAsync(async (req, res, next) => {
     return next(appError(400, '“是否允許購買多組”欄位錯誤，請聯絡管理員'));
   }
 
-  const updatedPlan = await Plan.findByIdAndUpdate(planId, req.body);
+  const updatedPlan = await Plan.findByIdAndUpdate(planId, req.body, {
+    new: true,
+    runValidators: true
+  });
   if (!updatedPlan) {
     return next(appError(500, '編輯回饋方案錯誤'));
   }
-
-  const newPlan = await Plan.findById(planId);
-  successHandler(res, '編輯回饋方案成功', newPlan);
+  successHandler(res, '編輯回饋方案成功', updatedPlan);
 });
 
 module.exports = handleUpdateProjectPlan;

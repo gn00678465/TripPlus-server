@@ -49,7 +49,8 @@ const handleUpdateProjectPayment = handleErrorAsync(async (req, res, next) => {
 
   const updatedProject = await Project.findByIdAndUpdate(
     req.params.id,
-    req.body
+    req.body,
+    { new: true, runValidators: true }
   );
 
   if (!updatedProject) {
@@ -57,9 +58,7 @@ const handleUpdateProjectPayment = handleErrorAsync(async (req, res, next) => {
     return next(appError(500, '編輯付款資料失敗'));
   }
 
-  const newProject = await Project.findById(req.params.id);
-
-  successHandler(res, '編輯付款資料成功', newProject);
+  successHandler(res, '編輯付款資料成功', updatedProject);
 });
 
 module.exports = handleUpdateProjectPayment;

@@ -29,15 +29,17 @@ const handleDeleteProjectFaqs = handleErrorAsync(async (req, res, next) => {
     return next(appError(400, '該常見問題已刪除'));
   }
 
-  const deletedFaqs = await Faqs.findByIdAndUpdate(faqsId, { isDelete: 1 });
+  const deletedFaqs = await Faqs.findByIdAndUpdate(
+    faqsId,
+    { $set: { isDelete: 1 } },
+    { new: true }
+  );
 
   if (!deletedFaqs) {
     return next(appError(500, '刪除常見問題失敗'));
   }
 
-  const newFaqs = await Faqs.findById(faqsId);
-
-  successHandler(res, '刪除最新消息成功', newFaqs);
+  successHandler(res, '刪除最新消息成功', deletedFaqs);
 });
 
 module.exports = handleDeleteProjectFaqs;
