@@ -40,9 +40,12 @@ const userSchema = new mongoose.Schema(
     introduction: {
       type: String
     },
-    follows: {
-      type: Array
-    },
+    follows: [
+      {
+        projectId: { type: mongoose.Schema.ObjectId, ref: 'projects' },
+        productId: { type: mongoose.Schema.ObjectId, ref: 'products' }
+      }
+    ],
     isGoogleSSO: {
       type: Number, //0 is not; 1 is google sso
       default: 0
