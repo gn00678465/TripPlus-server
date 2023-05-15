@@ -89,13 +89,14 @@ const handleUpdateTeam = handleErrorAsync(async (req, res, next) => {
     return next(appError(400, errArray.join('&')));
   }
 
-  const updatedTeam = await Team.findByIdAndUpdate(teamId, req.body);
+  const updatedTeam = await Team.findByIdAndUpdate(teamId, req.body, {
+    new: true,
+    runValidators: true
+  });
   if (!updatedTeam) {
     return next(appError(500, '編輯團隊資料失敗'));
   }
-
-  const newTeam = await Team.findById(teamId);
-  successHandler(res, '編輯團隊資料成功', newTeam);
+  successHandler(res, '編輯團隊資料成功', updatedTeam);
 });
 
 module.exports = handleUpdateTeam;

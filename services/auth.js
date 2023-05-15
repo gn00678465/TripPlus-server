@@ -26,6 +26,9 @@ const isAuth = handleErrorAsync(async (req, res, next) => {
     });
   });
   const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
+    return next(appError(500, '登入資訊錯誤，找不到使用者', next));
+  }
 
   req.user = currentUser;
   next();

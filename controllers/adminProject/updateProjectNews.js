@@ -28,6 +28,9 @@ const handleUpdateProjectNews = handleErrorAsync(async (req, res, next) => {
   if (news.projectId.toString() !== projId) {
     return next(appError(400, '專案或最新消息資料錯誤'));
   }
+  if (news.isDelete) {
+    return next(appError(400, '最新消息資料已刪除'));
+  }
 
   if (!title || !content) {
     return next(appError(400, '標題與内容為必填欄位'));
@@ -47,18 +50,20 @@ const handleUpdateProjectNews = handleErrorAsync(async (req, res, next) => {
     publishedAt = Date.now();
   }
 
-  const updatedNews = await News.findByIdAndUpdate(newsId, {
-    ...req.body,
-    publishedAt
-  });
+  const updatedNews = await News.findByIdAndUpdate(
+    newsId,
+    {
+      ...req.body,
+      publishedAt
+    },
+    { new: true, runValidators: true }
+  );
 
   if (!updatedNews) {
     return next(appError(500, '編輯最新消息失敗'));
   }
 
-  const newNews = await News.findById(newsId);
-
-  successHandler(res, '編輯最新消息成功', newNews);
+  successHandler(res, '編輯最新消息成功', updatedNews);
 });
 
 module.exports = handleUpdateProjectNews;

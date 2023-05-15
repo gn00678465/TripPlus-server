@@ -28,7 +28,11 @@ const handleDeleteProjectPlan = handleErrorAsync(async (req, res, next) => {
     return next(appError(400, '該回饋方案已刪除'));
   }
 
-  const deletedPlan = await Plan.findByIdAndUpdate(planId, { isDelete: 1 });
+  const deletedPlan = await Plan.findByIdAndUpdate(
+    planId,
+    { $set: { isDelete: 1 } },
+    { new: true }
+  );
   if (!deletedPlan) {
     return next(appError(500, '刪除回饋方案錯誤'));
   }

@@ -28,6 +28,9 @@ const handleUpdateProjectFaqs = handleErrorAsync(async (req, res, next) => {
   if (faqs.projectId.toString() !== projId) {
     return next(appError(400, '專案或常見問題資料錯誤'));
   }
+  if (faqs.isDelete) {
+    return next(appError(400, '常見問題資料已經刪除'));
+  }
 
   if (!question || !answer) {
     return next(appError(400, '問題與回答為必填欄位'));
@@ -47,18 +50,20 @@ const handleUpdateProjectFaqs = handleErrorAsync(async (req, res, next) => {
     publishedAt = Date.now();
   }
 
-  const updatedFaqs = await Faqs.findByIdAndUpdate(faqsId, {
-    ...req.body,
-    publishedAt
-  });
+  const updatedFaqs = await Faqs.findByIdAndUpdate(
+    faqsId,
+    {
+      ...req.body,
+      publishedAt
+    },
+    { new: true, runValidators: true }
+  );
 
   if (!updatedFaqs) {
     return next(appError(500, '編輯常見問題失敗'));
   }
 
-  const newFaqs = await Faqs.findById(faqsId);
-
-  successHandler(res, '編輯常見問題成功', newFaqs);
+  successHandler(res, '編輯常見問題成功', updatedFaqs);
 });
 
 module.exports = handleUpdateProjectFaqs;

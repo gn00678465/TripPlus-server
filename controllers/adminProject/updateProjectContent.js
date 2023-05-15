@@ -14,17 +14,19 @@ const handleReadProjectContent = handleErrorAsync(async (req, res, next) => {
     return next(appError(400, '無内文資訊'));
   }
 
-  const updatedProject = await Project.findByIdAndUpdate(req.params.id, {
-    content
-  });
+  const updatedProject = await Project.findByIdAndUpdate(
+    req.params.id,
+    {
+      content
+    },
+    { new: true, runValidators: true }
+  );
   if (!updatedProject) {
     return next(appError(500, '編輯專案内文失敗'));
   }
 
-  const newProject = await Project.findById(req.params.id);
-
   successHandler(res, '編輯專案内文成功', {
-    content: newProject.content ?? ''
+    content: updatedProject.content ?? ''
   });
 });
 
