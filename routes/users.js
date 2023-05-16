@@ -12,5 +12,6 @@ router.delete('/follow/:id', isAuth, UserController.removeFollow);
 router.get('/orders', isAuth, UserController.getOrders);
 router.get('/order/:id', isAuth, UserController.getOrderDetails);
 router.post('/order/:orderId/ranking', isAuth, UserController.createComment);
+router.get('/bonus', isAuth, UserController.getBonus);
 
 module.exports = router;
