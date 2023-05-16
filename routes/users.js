@@ -10,5 +10,6 @@ router.get('/follows', isAuth, UserController.getFollows);
 router.post('/follow/:id', isAuth, UserController.addFollow);
 router.delete('/follow/:id', isAuth, UserController.removeFollow);
 router.get('/orders', isAuth, UserController.getOrders);
+router.get('/order/:id', isAuth, UserController.getOrderDetails);
 
 module.exports = router;

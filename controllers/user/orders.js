@@ -31,4 +31,28 @@ const getOrders = handleErrorAsync(async (req, res, next) => {
   successHandler(res, '取得訂單資料成功', orders);
 });
 
-module.exports = { getOrders };
+const getOrderDetails = handleErrorAsync(async (req, res, next) => {
+  const { id } = req.params;
+  if (!id) {
+    return next(appError(400, '查無此訂單'));
+  }
+  const order = await Order.findById(id)
+    .populate({
+      path: 'projectId',
+      select: 'title'
+    })
+    .populate({
+      path: 'productId',
+      select: 'title'
+    })
+    .populate({
+      path: 'planId',
+      select: 'title price'
+    });
+  if (!order) {
+    return next(appError(400, '查無此訂單'));
+  }
+  successHandler(res, '取得訂單資訊成功', order);
+});
+
+module.exports = { getOrders, getOrderDetails };
