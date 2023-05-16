@@ -13,7 +13,7 @@ const planSchema = mongoose.Schema(
     },
     productId: {
       type: mongoose.Schema.ObjectId,
-      reuqired: [
+      required: [
         function () {
           return !this.projectId;
         },
