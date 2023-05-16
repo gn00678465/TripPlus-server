@@ -53,6 +53,10 @@ const userSchema = new mongoose.Schema(
     roles: {
       type: Array,
       default: ['user']
+    },
+    bonus: {
+      type: Number,
+      default: 0
     }
   },
   {
