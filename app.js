@@ -15,6 +15,7 @@ const authRouter = require('./routes/auth');
 const uploadRouter = require('./routes/upload');
 const projectRouter = require('./routes/adminProject');
 const productRouter = require('./routes/adminProduct');
+const orderRouter = require('./routes/order');
 
 require('./connections');
 
@@ -45,6 +46,7 @@ app.use('/auth', authRouter);
 app.use('/upload', uploadRouter);
 app.use('/admin/project', projectRouter);
 app.use('/admin/product', productRouter);
+app.use('/order', orderRouter);
 
 // 404 Not Found
 app.use(function (req, res, next) {
