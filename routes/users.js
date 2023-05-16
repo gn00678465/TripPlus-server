@@ -9,5 +9,6 @@ router.patch('/change-password', isAuth, UserController.updatePassword);
 router.get('/follows', isAuth, UserController.getFollows);
 router.post('/follow/:id', isAuth, UserController.addFollow);
 router.delete('/follow/:id', isAuth, UserController.removeFollow);
+router.get('/orders', isAuth, UserController.getOrders);
 
 module.exports = router;
