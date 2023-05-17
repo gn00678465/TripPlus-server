@@ -13,9 +13,10 @@ var indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 const uploadRouter = require('./routes/upload');
-const projectRouter = require('./routes/adminProject');
-const productRouter = require('./routes/adminProduct');
+const adminProjectRouter = require('./routes/adminProject');
+const adminProductRouter = require('./routes/adminProduct');
 const orderRouter = require('./routes/order');
+const projectRouter = require('./routes/project');
 
 require('./connections');
 
@@ -44,9 +45,10 @@ app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/auth', authRouter);
 app.use('/upload', uploadRouter);
-app.use('/admin/project', projectRouter);
-app.use('/admin/product', productRouter);
+app.use('/admin/project', adminProjectRouter);
+app.use('/admin/product', adminProductRouter);
 app.use('/order', orderRouter);
+app.use('/project', projectRouter);
 
 // 404 Not Found
 app.use(function (req, res, next) {
