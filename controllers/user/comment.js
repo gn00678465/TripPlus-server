@@ -23,7 +23,7 @@ const createComment = handleErrorAsync(async (req, res, next) => {
   if (order.isCommented === 1) {
     return next(appError(400, '此訂單已評論'));
   }
-  if (order.member.toString() !== req.user.id) {
+  if (order.member?.toString() !== req.user.id) {
     return next(appError(403, '您無權限編輯'));
   }
   if (!product || order.productId?.toString() !== productId) {
