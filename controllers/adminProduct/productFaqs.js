@@ -14,6 +14,9 @@ const getProductFaqs = handleErrorAsync(async (req, res, next) => {
   if (!product) {
     return next(appError(400, '查無商品'));
   }
+  if (product.creator?.toString() !== req.user.id) {
+    return next(appError(403, '您無權限瀏覽商品常見問題'));
+  }
   const productFaqs = await Faqs.find({ productId });
 
   successHandler(res, '取得商品常見問題成功', productFaqs);
@@ -27,6 +30,9 @@ const createProductFaq = handleErrorAsync(async (req, res, next) => {
   const product = await Product.findById(productId);
   if (!product) {
     return next(appError(400, '查無商品'));
+  }
+  if (product.creator?.toString() !== req.user.id) {
+    return next(appError(403, '您無權限新增商品常見問題'));
   }
   if (!question || !answer) {
     return next(appError(400, '問題與回答為必填欄位'));
@@ -60,6 +66,9 @@ const editProductFaq = handleErrorAsync(async (req, res, next) => {
   const product = await Product.findById(productId);
   if (!product) {
     return next(appError(400, '查無專案'));
+  }
+  if (product.creator?.toString() !== req.user.id) {
+    return next(appError(403, '您無權限編輯商品常見問題'));
   }
   const faq = await Faqs.findById(faqId);
   if (!faq) {
@@ -108,12 +117,13 @@ const delProductFaq = handleErrorAsync(async (req, res, next) => {
   if (!productId || !faqId) {
     return next(appError(400, '路由資訊錯誤'));
   }
-
   const product = await Product.findById(productId);
   if (!product) {
     return next(appError(400, '查無專案'));
   }
-
+  if (product.creator?.toString() !== req.user.id) {
+    return next(appError(403, '您無權限刪除商品常見問題'));
+  }
   const faq = await Faqs.findById(faqId);
   if (!faq) {
     return next(appError(400, '查無常見問題'));
