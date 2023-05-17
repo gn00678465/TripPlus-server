@@ -21,6 +21,7 @@ router.post(
 );
 
 router.get('/', isAdmin, ProjectController.handleReadAdminProject);
+router.get('/:id/orderList', isAdmin, ProjectController.handleReadProjOrder);
 router.get('/:projId/team/:teamId', isAdmin, ProjectController.handleReadTeam);
 router.get('/:id/info', isAdmin, ProjectController.handleReadProject);
 router.get('/:id/content', isAdmin, ProjectController.handleReadProjectContent);
