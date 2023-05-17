@@ -99,6 +99,24 @@ const projectSchema = mongoose.Schema(
   }
 );
 
+projectSchema.virtual('plans', {
+  ref: 'plans',
+  foreignField: 'projectId',
+  localField: '_id'
+});
+
+projectSchema.virtual('news', {
+  ref: 'news',
+  foreignField: 'projectId',
+  localField: '_id'
+});
+
+projectSchema.virtual('faqs', {
+  ref: 'faqs',
+  foreignField: 'projectId',
+  localField: '_id'
+});
+
 projectSchema.virtual('histories', {
   ref: 'histories',
   foreignField: 'projectId',
