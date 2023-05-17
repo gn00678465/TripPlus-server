@@ -7,6 +7,7 @@ const orderSchema = mongoose.Schema(
     },
     projectId: {
       type: mongoose.Schema.ObjectId,
+      ref: 'projects',
       require: [
         function () {
           return !this.productId;
@@ -16,6 +17,7 @@ const orderSchema = mongoose.Schema(
     },
     productId: {
       type: mongoose.Schema.ObjectId,
+      ref: 'products',
       require: [
         function () {
           return !this.projectId;
@@ -25,7 +27,8 @@ const orderSchema = mongoose.Schema(
     },
     planId: {
       type: mongoose.Schema.ObjectId,
-      require: [true, '請填寫回饋方案 id']
+      require: [true, '請填寫回饋方案 id'],
+      ref: 'plans'
     },
     transactionId: {
       type: String
