@@ -20,6 +20,12 @@ const createComment = handleErrorAsync(async (req, res, next) => {
   if (!order) {
     return next(appError(400, '查無此訂單'));
   }
+  if (order.isCommented === 1) {
+    return next(appError(400, '此訂單已評論'));
+  }
+  if (order.member.toString() !== req.user.id) {
+    return next(appError(403, '您無權限編輯'));
+  }
   if (!product || order.productId?.toString() !== productId) {
     return next(appError(400, '查無此商品'));
   }
@@ -47,7 +53,7 @@ const createComment = handleErrorAsync(async (req, res, next) => {
     ])
   ) {
     errMsgAry.push(
-      '請選擇：符合期待、質感優異待、運送迅速待、想再回購待、服務貼心待、風格獨特'
+      '請選擇：符合期待、質感優異、運送迅速、想再回購、服務貼心、風格獨特'
     );
   }
   if (errMsgAry.length > 0) {
@@ -58,6 +64,12 @@ const createComment = handleErrorAsync(async (req, res, next) => {
     writer: req.user.id,
     ...req.body
   });
+  const updateOrder = await Order.findByIdAndUpdate(orderId, {
+    isCommented: 1
+  });
+  if (updateOrder) {
+    return next(appError(500, '訂單編輯失敗，請聯絡管理員'));
+  }
   if (!newComment) {
     return next(appError(500, '新增評論失敗，請聯絡管理員'));
   }
