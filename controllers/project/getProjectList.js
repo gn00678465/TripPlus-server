@@ -15,6 +15,7 @@ const handleGetProjectList = handleErrorAsync(async (req, res, next) => {
   if (
     sort &&
     !validator.isIn(sort, [
+      'hot_project',
       'recently_launched',
       'recently_ending',
       'all',
@@ -32,40 +33,36 @@ const handleGetProjectList = handleErrorAsync(async (req, res, next) => {
     return next(appError(400, '路由資訊錯誤，page 或 limit 資料錯誤'));
   }
 
-  //最新上線
   if (sort === 'recently_launched') {
+    //最新上線
     projList.sort((a, b) => {
       return Date.parse(b.createdAt) - Date.parse(a.createdAt); //desc
     });
-  }
-
-  //即將結束
-  if (sort === 'recently_ending') {
+  } else if (sort === 'recently_ending') {
+    //即將結束
     projList = projList
       .filter((x) => Date.parse(x.endTime) > Date.now()) //募資未結束
       .sort((a, b) => {
         return a.countDownDays - b.countDownDays; //asc
       });
-  }
-
-  //專案人次
-  if (sort === 'project_backers') {
+  } else if (sort === 'project_backers') {
+    //專案人次
     projList.sort((a, b) => {
       //desc
       return b.sponsorCount - a.sponsorCount;
     });
+  } else if (sort === 'hot_project') {
+    //熱門專案
+    projList = projList
+      .filter((x) => x.sponsorCount >= 10)
+      .sort((a, b) => {
+        //desc
+        return b.sponsorCount - a.sponsorCount;
+      });
   }
 
-  if (category === '0') {
-    projList = projList.filter((x) => x.category === 0);
-  }
-
-  if (category === '1') {
-    projList = projList.filter((x) => x.category === 1);
-  }
-
-  if (category === '2') {
-    projList = projList.filter((x) => x.category === 2);
+  if (category) {
+    projList = projList.filter((x) => x.category == category);
   }
 
   const pageN = Number(page);
@@ -77,6 +74,7 @@ const handleGetProjectList = handleErrorAsync(async (req, res, next) => {
   const result = {
     total,
     totalPages,
+    page: pageN,
     items,
     startIndex: (pageN - 1) * limitN + 1,
     endIndex: (pageN - 1) * limitN + items.length,
