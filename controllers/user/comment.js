@@ -67,7 +67,7 @@ const createComment = handleErrorAsync(async (req, res, next) => {
   const updateOrder = await Order.findByIdAndUpdate(orderId, {
     isCommented: 1
   });
-  if (updateOrder) {
+  if (!updateOrder) {
     return next(appError(500, '訂單編輯失敗，請聯絡管理員'));
   }
   if (!newComment) {

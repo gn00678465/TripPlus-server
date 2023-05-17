@@ -5,10 +5,14 @@ const handleErrorAsync = require('../../services/handleErrorAsync');
 const Product = require('../../models/productsModel');
 
 const getProduct = handleErrorAsync(async (req, res, next) => {
-  if (!req.params.productId) {
+  const { productId } = req.params;
+  if (!productId) {
     return next(appError(400, '路由資訊錯誤'));
   }
-  product = await Product.findById(req.params.productId);
+  const product = await Product.findById(productId);
+  if (product.creator?.toString() !== req.user.id) {
+    return next(appError(403, '您無權限瀏覽此商品資料'));
+  }
   if (!product) {
     return next(appError(400, '取得商品資料失敗，查無商品'));
   }
@@ -20,6 +24,13 @@ const editProductImage = handleErrorAsync(async (req, res, next) => {
   const { productId } = req.params;
   if (!productId) {
     return next(appError(400, '路由資訊錯誤'));
+  }
+  const product = await Product.findById(productId);
+  if (!product) {
+    return next(appError(400, '查無此專案'));
+  }
+  if (product.creator?.toString() !== req.user.id) {
+    return next(appError(403, '您無權限編輯商品主視覺圖'));
   }
   const errMsgAry = [];
   if (keyVision && !validator.isURL(keyVision)) {
@@ -59,6 +70,13 @@ const editProductSetting = handleErrorAsync(async (req, res, next) => {
   const { productId } = req.params;
   if (!productId) {
     return next(appError(400, '路由資訊錯誤'));
+  }
+  const product = await Product.findById(productId);
+  if (!product) {
+    return next(appError(400, '查無此專案'));
+  }
+  if (product.creator?.toString() !== req.user.id) {
+    return next(appError(403, '您無權限編輯商品設定'));
   }
   if (!title || !(category === 0 ? '0' : category)) {
     return next(appError(400, '以下欄位不可爲空：商品名稱、商品類型'));
@@ -107,15 +125,20 @@ const editProductSetting = handleErrorAsync(async (req, res, next) => {
   if (!updatedSetting) {
     return next(appError(500, '編輯商品基本資料失敗'));
   }
-  const product = await Product.findById(req.params.productId);
-
-  successHandler(res, '編輯商品基本資料成功', product);
+  successHandler(res, '編輯商品基本資料成功', updatedSetting);
 });
 const editProductPayment = handleErrorAsync(async (req, res, next) => {
   const { payment, isAllowInstallment, atmDeadline, csDeadline } = req.body;
   const { productId } = req.params;
   if (!productId) {
     return next(appError(400, '路由資訊錯誤'));
+  }
+  const product = await Product.findById(productId);
+  if (!product) {
+    return next(appError(400, '查無此專案'));
+  }
+  if (product.creator?.toString() !== req.user.id) {
+    return next(appError(403, '您無權限編輯商品付款條件'));
   }
   const errMsgAry = [];
   if (
@@ -152,9 +175,8 @@ const editProductPayment = handleErrorAsync(async (req, res, next) => {
   if (!updatePayment) {
     return next(appError(500, '編輯付款資料失敗'));
   }
-  const product = await Product.findById(productId);
 
-  successHandler(res, '編輯付款資料成功', product);
+  successHandler(res, '編輯付款資料成功', updatePayment);
 });
 module.exports = {
   getProduct,

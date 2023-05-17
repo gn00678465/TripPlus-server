@@ -10,9 +10,12 @@ const getTeam = handleErrorAsync(async (req, res, next) => {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);
+  if (product.creator?.toString() !== req.user.id) {
+    return next(appError(403, '您無權限瀏覽商品團隊'));
+  }
   const team = await Team.findById(teamId);
-  if (!productId) {
-    return next(appError(400, '商品資料錯誤'));
+  if (!product) {
+    return next(appError(400, '查無此商品'));
   }
   if (product.teamId.toString() !== teamId) {
     return next(appError(400, '商品或團隊資料錯誤'));

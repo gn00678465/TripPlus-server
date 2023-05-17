@@ -14,6 +14,9 @@ const getProductPlans = handleErrorAsync(async (req, res, next) => {
   if (!product) {
     return next(appError(400, '查無商品'));
   }
+  if (product.creator?.toString() !== req.user.id) {
+    return next(appError(403, '您無權限瀏覽商品方案'));
+  }
   const plans = await Plan.find({ productId, isDelete: 0 });
   successHandler(res, '取得商品回饋方案成功', plans);
 });
@@ -29,6 +32,9 @@ const createProductPlan = handleErrorAsync(async (req, res, next) => {
   }
   if (!title || !(price === 0 ? '0' : price) || !content) {
     return next(appError(400, '回饋方案名稱、價格與内容為必填欄位'));
+  }
+  if (product.creator?.toString() !== req.user.id) {
+    return next(appError(403, '您無權新增覽商品方案'));
   }
   const errMsgAry = [];
   if (!validator.isInt(price.toString(), { gt: 0 })) {
@@ -61,6 +67,9 @@ const editProductPlan = handleErrorAsync(async (req, res, next) => {
   const product = await Product.findById(productId);
   if (!product) {
     return next(appError(400, '查無商品'));
+  }
+  if (product.creator?.toString() !== req.user.id) {
+    return next(appError(403, '您無權限編輯商品方案'));
   }
   const plan = await Plan.findById(planId);
   if (!plan) {
@@ -106,6 +115,9 @@ const delProductPlan = handleErrorAsync(async (req, res, next) => {
   const product = await Product.findById(productId);
   if (!product) {
     return next(appError(400, '查無專案'));
+  }
+  if (product.creator?.toString() !== req.user.id) {
+    return next(appError(403, '您無權限刪除商品方案'));
   }
   const plan = await Plan.findById(planId);
   if (!plan) {

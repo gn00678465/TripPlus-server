@@ -18,6 +18,7 @@ const {
   editProductFaq,
   delProductFaq
 } = require('./productFaqs');
+const getProductIndex = require('./productDashboard');
 
 module.exports.getProduct = getProduct;
 module.exports.editProductImage = editProductImage;
@@ -34,3 +35,4 @@ module.exports.getProductFaqs = getProductFaqs;
 module.exports.createProductFaq = createProductFaq;
 module.exports.editProductFaq = editProductFaq;
 module.exports.delProductFaq = delProductFaq;
+module.exports.getProductIndex = getProductIndex;
