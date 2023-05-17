@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const successHandler = require('../../services/successHandler');
 
 const appError = require('../../services/appError');
@@ -28,41 +29,61 @@ const handleConvertIntoProduct = handleErrorAsync(async (req, res, next) => {
     isShowTarget,
     createdAt,
     updateAt,
+    isAbled,
     ...productInfo //the info product needs
   } = proj.toObject(); //turn mongoose doc into plain object
 
-  const newProd = await Product.create(productInfo);
-  if (!newProd) {
-    return next(appError(500, '募資轉商品失敗'));
-  }
-
+  //get project faqs
   const faqs = await Faqs.find({ projectId: req.params.id });
-  if (faqs) {
-    const faqsData = faqs.map((q) => {
-      const plainQ = q.toObject(); //turn mongoose object into plain object
-      const { _id, projectId, createdAt, updateAt, ...qData } = plainQ;
-      qData.productId = newProd._id;
-      return qData;
+  let session = null;
+  let newProd = null;
+
+  await Product.createCollection()
+    .then(() => {
+      return mongoose.startSession();
+    })
+    .then(async (_session) => {
+      session = _session;
+      session.startTransaction();
+      newProd = await Product.create([productInfo], { session });
+      return newProd;
+    })
+    .then(() => {
+      if (faqs.length > 0) {
+        const faqsData = faqs.map((q) => {
+          const plainQ = q.toObject(); //turn mongoose object into plain object
+          const { _id, projectId, createdAt, updateAt, ...qData } = plainQ;
+          qData.productId = newProd[0]._id;
+          return qData;
+        });
+        return Faqs.create([faqsData], { session });
+      }
+      return true;
+    })
+    .then(() => {
+      return Project.findByIdAndUpdate(
+        req.params.id,
+        {
+          isCommercialized: 1,
+          productId: newProd[0]._id
+        },
+        { session }
+      );
+    })
+    .then(async () => {
+      await session.commitTransaction();
+      const newProdWithFaqs = await Product.findById(newProd[0]._id).populate(
+        'faqs'
+      );
+      successHandler(res, '募資轉商品成功', newProdWithFaqs);
+    })
+    .catch(async () => {
+      await session.abortTransaction();
+      return next(appError(500, '募資轉商品失敗，請聯絡管理員'));
+    })
+    .finally(async () => {
+      await session.endSession();
     });
-    const newFaqs = await Faqs.insertMany(faqsData);
-    if (!newFaqs) {
-      return appError(500, '募資轉商品失敗，轉換常見問題失敗，請聯絡管理員');
-    }
-  }
-
-  const updatedProj = await Project.findByIdAndUpdate(req.params.id, {
-    isCommercialized: 1,
-    productId: newProd._id
-  });
-  if (!updatedProj) {
-    return next(
-      appError(500, '募資轉商品失敗，更新專案狀態發生錯誤，請聯絡管理員')
-    );
-  }
-
-  const newProdWithFaqs = await Product.findById(newProd._id).populate('faqs');
-
-  successHandler(res, '募資轉商品成功', newProdWithFaqs);
 });
 
 module.exports = handleConvertIntoProduct;
