@@ -4,7 +4,7 @@ const successHandler = require('../../services/successHandler');
 const Order = require('../../models/ordersModel');
 
 const getOrders = handleErrorAsync(async (req, res, next) => {
-  const orders = await Order.find()
+  const orders = await Order.find({ member: req.user.id })
     .populate({
       path: 'projectId',
       select: 'title',
