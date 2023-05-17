@@ -1,3 +1,4 @@
+const ObjectId = require('mongoose').Types.ObjectId;
 const successHandler = require('../../services/successHandler');
 
 const appError = require('../../services/appError');
@@ -9,7 +10,12 @@ const News = require('../../models/newsModel');
 const handleDeleteProjectNews = handleErrorAsync(async (req, res, next) => {
   const { projId, newsId } = req.params;
 
-  if (!projId || !newsId) {
+  if (
+    !projId ||
+    !newsId ||
+    !ObjectId.isValid(projId) ||
+    !ObjectId.isValid(newsId)
+  ) {
     return next(appError(400, '路由資訊錯誤'));
   }
 

@@ -1,3 +1,4 @@
+const ObjectId = require('mongoose').Types.ObjectId;
 const validator = require('validator');
 
 const successHandler = require('../../services/successHandler');
@@ -12,7 +13,12 @@ const handleUpdateProjectNews = handleErrorAsync(async (req, res, next) => {
   const { projId, newsId } = req.params;
   const { title, content, isPublish } = req.body;
 
-  if (!projId || !newsId) {
+  if (
+    !projId ||
+    !newsId ||
+    !ObjectId.isValid(projId) ||
+    !ObjectId.isValid(newsId)
+  ) {
     return next(appError(400, '路由資訊錯誤'));
   }
 
