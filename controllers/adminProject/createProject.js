@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const validator = require('validator');
 
 const successHandler = require('../../services/successHandler');
@@ -58,29 +59,51 @@ const handleCreateProject = handleErrorAsync(async (req, res, next) => {
     return next(appError(400, errArray.join('&')));
   }
 
-  const newTeam = await Team.create({
-    title: teamName
-  });
-
-  if (!newTeam || !newTeam?._id) {
-    return next(appError(500, '建立團隊資料發生錯誤，請聯絡管理員'));
-  }
-
-  const newProject = await Project.create({
-    creator: req.user._id,
-    title,
-    teamId: newTeam._id,
-    startTime,
-    endTime,
-    target,
-    keyVision
-  });
-
-  if (!newProject) {
-    return next(appError(500, '新增專案資料發生錯誤，請聯絡管理員'));
-  }
-
-  successHandler(res, '新增募資專案成功', newProject);
+  //transaction
+  let session = null;
+  Team.createCollection()
+    .then(() => {
+      return mongoose.startSession();
+    })
+    .then((_session) => {
+      session = _session;
+      session.startTransaction();
+      return Team.create(
+        [
+          {
+            title: teamName
+          }
+        ],
+        { session }
+      );
+    })
+    .then(async (newTeam) => {
+      return await Project.create(
+        [
+          {
+            creator: req.user._id,
+            title,
+            teamId: newTeam[0]._id,
+            startTime,
+            endTime,
+            target,
+            keyVision
+          }
+        ],
+        { session }
+      );
+    })
+    .then(async (newProject) => {
+      await session.commitTransaction();
+      successHandler(res, '新增專案成功', newProject[0]);
+    })
+    .catch(async () => {
+      await session.abortTransaction();
+      return next(appError(500, '新增專案資料發生錯誤，請聯絡管理員'));
+    })
+    .finally(async () => {
+      await session.endSession();
+    });
 });
 
 module.exports = handleCreateProject;
