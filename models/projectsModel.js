@@ -105,6 +105,19 @@ projectSchema.virtual('histories', {
   localField: '_id'
 });
 
+//募資進度
+projectSchema.virtual('progressRate').get(function () {
+  return Math.round((this.sum / this.target) * 100);
+});
+
+//倒數天數
+projectSchema.virtual('countDownDays').get(function () {
+  const days = Math.floor(
+    (Date.parse(this.endTime) - Date.now()) / (1000 * 60 * 60 * 24)
+  );
+  return days > 0 ? days : 0;
+});
+
 const Project = mongoose.model('projects', projectSchema);
 
 module.exports = Project;

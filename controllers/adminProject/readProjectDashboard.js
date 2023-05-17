@@ -30,10 +30,6 @@ const handleReadProjDashboard = handleErrorAsync(async (req, res, next) => {
     return next(appError(500, '取得專案 Dashboard 資料失敗'));
   }
 
-  const countDownDays = Math.round(
-    (Date.parse(proj.endTime) - Date.now()) / (1000 * 60 * 60 * 24)
-  );
-
   const result = {
     id: req.params.id,
     projectTitle: proj.title,
@@ -44,8 +40,8 @@ const handleReadProjDashboard = handleErrorAsync(async (req, res, next) => {
     unpaidOrder: orders.filter((x) => x.paymentStatus === 0).length, //待付款訂單
     paidOrder: orders.filter((x) => x.paymentStatus === 1).length, //已付款訂單
     shipedOrder: orders.filter((x) => x.shipmentStatus > 0).length, //已出貨訂單
-    progressRate: Math.round((proj.sum / proj.target) * 100), //募資進度 %
-    countDownDays: countDownDays > 0 ? countDownDays : 0 //倒數天數
+    progressRate: proj.progressRate, //募資進度 %
+    countDownDays: proj.countDownDays //倒數天數
   };
 
   successHandler(res, '取得專案 dashboard 資料成功', result);
