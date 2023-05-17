@@ -26,6 +26,11 @@ const handleUpdateProjectSetting = handleErrorAsync(async (req, res, next) => {
     return next(appError(400, '路由資訊錯誤'));
   }
 
+  const proj = await Project.findById(req.params.id);
+  if (!proj) {
+    return next(appError(400, '查無專案'));
+  }
+
   //必填欄位
   if (
     !title ||

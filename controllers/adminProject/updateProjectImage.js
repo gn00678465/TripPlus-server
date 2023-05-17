@@ -14,6 +14,11 @@ const handleUpdateProjectImage = handleErrorAsync(async (req, res, next) => {
     return next(appError(400, '路由資訊錯誤'));
   }
 
+  const proj = await Project.findById(req.params.id);
+  if (!proj) {
+    return next(appError(400, '查無專案'));
+  }
+
   const errArray = [];
   if (keyVision && !validator.isURL(keyVision)) {
     errArray.push('主視覺連結錯誤');

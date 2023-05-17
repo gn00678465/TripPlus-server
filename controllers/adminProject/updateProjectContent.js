@@ -10,6 +10,11 @@ const handleReadProjectContent = handleErrorAsync(async (req, res, next) => {
     return next(appError(400, '路由資訊錯誤'));
   }
 
+  const proj = await Project.findById(req.params.id);
+  if (!proj) {
+    return next(appError(400, '查無專案'));
+  }
+
   if (!Object.keys(req.body).includes('content')) {
     return next(appError(400, '無内文資訊'));
   }
