@@ -49,6 +49,9 @@ const getOrderDetails = handleErrorAsync(async (req, res, next) => {
       path: 'planId',
       select: 'title price'
     });
+  if (order.member?.toString() !== req.user.id) {
+    return next(appError(403, '您無權限查看'));
+  }
   if (!order) {
     return next(appError(400, '查無此訂單'));
   }
