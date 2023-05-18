@@ -1,3 +1,4 @@
+const ObjectId = require('mongoose').Types.ObjectId;
 const validator = require('validator');
 
 const successHandler = require('../../services/successHandler');
@@ -10,7 +11,7 @@ const Project = require('../../models/projectsModel');
 const handleUpdateProjectPayment = handleErrorAsync(async (req, res, next) => {
   const { payment, isAllowInstallment, atmDeadline, csDeadline } = req.body;
 
-  if (!req.params.id) {
+  if (!req.params.id || !ObjectId.isValid(req.params.id)) {
     return next(appError(400, '路由資訊錯誤'));
   }
 

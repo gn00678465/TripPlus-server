@@ -9,7 +9,7 @@ const Product = require('../../models/productsModel');
 const Faqs = require('../../models/faqsModel');
 
 const handleConvertIntoProduct = handleErrorAsync(async (req, res, next) => {
-  if (!req.params.id) {
+  if (!req.params.id || !mongoose.Types.ObjectId.isValid(req.params.id)) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const proj = await Project.findById(req.params.id);

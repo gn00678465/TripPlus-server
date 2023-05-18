@@ -1,3 +1,4 @@
+const ObjectId = require('mongoose').Types.ObjectId;
 const validator = require('validator');
 
 const successHandler = require('../../services/successHandler');
@@ -12,7 +13,12 @@ const instagramRule = /^[\w](?!.*?\.{2})[\w.]{1,28}[\w]$/;
 
 const handleUpdateTeam = handleErrorAsync(async (req, res, next) => {
   const { projId, teamId } = req.params;
-  if (!projId || !teamId) {
+  if (
+    !projId ||
+    !teamId ||
+    !ObjectId.isValid(projId) ||
+    !ObjectId.isValid(teamId)
+  ) {
     return next(appError(400, '路由資訊錯誤'));
   }
 

@@ -1,3 +1,4 @@
+const ObjectId = require('mongoose').Types.ObjectId;
 const successHandler = require('../../services/successHandler');
 
 const appError = require('../../services/appError');
@@ -5,7 +6,7 @@ const handleErrorAsync = require('../../services/handleErrorAsync');
 const Project = require('../../models/projectsModel');
 
 const handleReadProject = handleErrorAsync(async (req, res, next) => {
-  if (!req.params.id) {
+  if (!req.params.id || !ObjectId.isValid(req.params.id)) {
     return next(appError(400, '路由資訊錯誤'));
   }
 
