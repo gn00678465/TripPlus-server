@@ -21,7 +21,7 @@ const handleReadAdminProject = handleErrorAsync(async (req, res, next) => {
     sortSum
   } = req.query;
 
-  if (!validator.isInt(page) || !validator.isInt(limit)) {
+  if (!validator.isInt(page, { gt: 0 }) || !validator.isInt(limit, { gt: 0 })) {
     return next(appError(400, '路由資訊錯誤，page 或 limit 資料錯誤'));
   }
 

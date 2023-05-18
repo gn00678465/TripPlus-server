@@ -29,7 +29,7 @@ const handleGetProjectList = handleErrorAsync(async (req, res, next) => {
     return next(appError(400, '路由資訊錯誤，category 資料錯誤'));
   }
 
-  if (!validator.isInt(page) || !validator.isInt(limit)) {
+  if (!validator.isInt(page, { gt: 0 }) || !validator.isInt(limit, { gt: 0 })) {
     return next(appError(400, '路由資訊錯誤，page 或 limit 資料錯誤'));
   }
 
