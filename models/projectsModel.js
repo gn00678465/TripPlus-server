@@ -136,6 +136,24 @@ projectSchema.virtual('countDownDays').get(function () {
   return days > 0 ? days : 0;
 });
 
+//專案狀態
+projectSchema.virtual('status').get(function () {
+  if (this.isAbled === 0) {
+    //草稿
+    return 'draft';
+  } else if (Date.parse(this.endTime) > Date.now()) {
+    //進行中
+    return 'progress';
+  } else if (Date.now() > Date.parse(this.endTime)) {
+    //已結束
+    return 'complete';
+  }
+});
+
+projectSchema.virtual('type').get(function () {
+  return 'project';
+});
+
 const Project = mongoose.model('projects', projectSchema);
 
 module.exports = Project;

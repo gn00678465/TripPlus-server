@@ -105,6 +105,20 @@ productSchema.virtual('comments', {
   localField: '_id'
 });
 
+//狀態
+productSchema.virtual('status').get(function () {
+  if (this.isAbled === 0) {
+    //草稿
+    return 'draft';
+  } else {
+    //進行中
+    return 'progress';
+  }
+});
+productSchema.virtual('type').get(function () {
+  return 'product';
+});
+
 const Products = mongoose.model('products', productSchema);
 
 module.exports = Products;
