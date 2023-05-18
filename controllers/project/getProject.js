@@ -13,9 +13,21 @@ const handleGetProject = handleErrorAsync(async (req, res, next) => {
   const proj = await Project.findById(req.params.id)
     .populate('teamId')
     .populate('histories')
-    .populate('news')
-    .populate('faqs')
-    .populate('plans');
+    .populate({
+      path: 'news',
+      match: { isDelete: 0, isPublish: 1 },
+      options: { sort: { publishedAt: -1 } }
+    })
+    .populate({
+      path: 'faqs',
+      match: { isDelete: 0, isPublish: 1 },
+      options: { sort: { publishedAt: 1 } }
+    })
+    .populate({
+      path: 'plans',
+      match: { isDelete: 0 },
+      options: { sort: { createdAt: 1 } }
+    });
 
   if (!proj) {
     return next(appError(400, '專案 id 資訊錯誤，找不到專案'));
