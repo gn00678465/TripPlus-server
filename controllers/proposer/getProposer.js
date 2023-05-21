@@ -2,6 +2,7 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const successHandler = require('../../services/successHandler');
 const appError = require('../../services/appError');
 const handleErrorAsync = require('../../services/handleErrorAsync');
+const Project = require('../../models/projectsModel');
 const Team = require('../../models/teamsModel');
 
 const getProposer = handleErrorAsync(async (req, res, next) => {
@@ -16,7 +17,20 @@ const getProposer = handleErrorAsync(async (req, res, next) => {
     return next(appError(500, '取得提案者資料失敗'));
   }
 
-  successHandler(res, '取得提案者資料成功', team);
+  const proj = await Project.find({ teamId: teamId });
+
+  const projects = {
+    all: proj.filter((item) => item.isAbled !== 0),
+    progress: proj.filter((item) => item.status === 'progress'),
+    complete: proj.filter((item) => item.status === 'complete')
+  };
+
+  const result = {
+    team,
+    projects
+  };
+
+  successHandler(res, '取得提案者資料成功', result);
 });
 
 module.exports = getProposer;
