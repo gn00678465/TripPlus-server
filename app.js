@@ -19,6 +19,7 @@ const orderRouter = require('./routes/order');
 const projectRouter = require('./routes/project');
 const proposerRouter = require('./routes/proposer');
 const messageRouter = require('./routes/message');
+const homeRouter = require('./routes/home');
 
 require('./connections');
 
@@ -61,6 +62,7 @@ app.use('/order', orderRouter);
 app.use('/project', projectRouter);
 app.use('/proposer', proposerRouter);
 app.use('/message', messageRouter);
+app.use('/home', homeRouter);
 
 // 404 Not Found
 app.use(function (req, res, next) {
