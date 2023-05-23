@@ -18,6 +18,7 @@ const adminProductRouter = require('./routes/adminProduct');
 const orderRouter = require('./routes/order');
 const projectRouter = require('./routes/project');
 const proposerRouter = require('./routes/proposer');
+const messageRouter = require('./routes/message');
 
 require('./connections');
 
@@ -30,6 +31,14 @@ process.on('uncaughtException', (err) => {
   console.error(err.message);
   console.error(err.stack);
   process.exit(1);
+});
+
+const io = require('socket.io')();
+app.io = io;
+require('./socket')(io);
+app.use((req, res, next) => {
+  res.io = io;
+  next();
 });
 
 app.use(cors());
@@ -51,6 +60,7 @@ app.use('/admin/product', adminProductRouter);
 app.use('/order', orderRouter);
 app.use('/project', projectRouter);
 app.use('/proposer', proposerRouter);
+app.use('/message', messageRouter);
 
 // 404 Not Found
 app.use(function (req, res, next) {
