@@ -23,7 +23,7 @@ module.exports = (io) => {
         });
         io.emit('message', { ...messagePayload });
       } catch (error) {
-        console.log(error);
+        io.emit(error);
       }
     });
 
