@@ -32,6 +32,14 @@ process.on('uncaughtException', (err) => {
   process.exit(1);
 });
 
+const io = require('socket.io')();
+app.io = io;
+require('./socket')(io);
+app.use((req, res, next) => {
+  res.io = io;
+  next();
+});
+
 app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
