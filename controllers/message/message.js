@@ -32,5 +32,25 @@ const createMessages = handleErrorAsync(async (req, res, next) => {
   }
   successHandler(res, '新增訊息成功', newMessage);
 });
+const getMemberMessages = handleErrorAsync(async (req, res, next) => {
+  const { id } = req.user;
+  const messages = await Message.find({
+    $or: [{ sender: id }, { receiver: id }]
+  })
+    .populate({
+      path: 'sender',
+      select: 'name nickName photo'
+    })
+    .populate({
+      path: 'receiver',
+      select: 'name nickName photo'
+    })
+    .sort({ createdAt: -1 });
 
-module.exports = { createMessages };
+  if (!messages) {
+    return next(appError(500, '查無相關訊息'));
+  }
+  successHandler(res, '取得訊息', messages);
+});
+
+module.exports = { createMessages, getMemberMessages };
