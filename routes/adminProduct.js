@@ -51,4 +51,5 @@ router.delete(
   isAdmin,
   productController.delProductFaq
 );
+router.patch('/:productId/abled', isAdmin, productController.editAbled);
 module.exports = router;

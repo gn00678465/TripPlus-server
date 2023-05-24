@@ -64,8 +64,7 @@ const editProductSetting = handleErrorAsync(async (req, res, next) => {
     weight,
     url,
     isLimit,
-    seoDescription,
-    isAbled
+    seoDescription
   } = req.body;
   const { productId } = req.params;
   if (!productId) {
@@ -92,12 +91,6 @@ const editProductSetting = handleErrorAsync(async (req, res, next) => {
     errMsgAry.push('庫存限量是否顯示格式不正確');
   }
 
-  if (
-    (isAbled === 0 ? '0' : isAbled) &&
-    !validator.isIn(isAbled.toString(), ['0', '1'])
-  ) {
-    errMsgAry.push('是否啓用格式不正確');
-  }
   if (
     url &&
     !validator.isURL(url, {
