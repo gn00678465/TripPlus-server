@@ -29,33 +29,39 @@ const getBonus = handleErrorAsync(async (req, res, next) => {
   const products = [];
 
   orders.forEach((order) => {
-    if (order.projectId) {
-      const project = order.projectId;
-      let sendDate = '';
-      if (project.endTime) {
-        sendDate = new Date(project.endTime);
-        sendDate.setDate(sendDate.getDate() + 30);
-      } else {
-        sendDate = new Date(order.paidAt);
-        sendDate.setDate(sendDate.getDate() + 30);
+    if (order.bonus > 0) {
+      if (order.projectId) {
+        const project = order.projectId;
+        let sendDate = '';
+        if (project.endTime) {
+          sendDate = new Date(project.endTime);
+          sendDate.setDate(sendDate.getDate() + 30);
+        } else {
+          sendDate = new Date(order.paidAt);
+          sendDate.setDate(sendDate.getDate() + 30);
+        }
+        const expirationDate = new Date(sendDate.getFullYear() + 1, 0, 1);
+        projects.push({
+          title: project.title,
+          sendDate: sendDate.toISOString(),
+          expirationDate: expirationDate.toISOString(),
+          transactionId: order.transactionId,
+          bonus: order.bonus
+        });
       }
-      projects.push({
-        title: project.title,
-        sendDate: sendDate.toISOString(),
-        transactionId: order.transactionId,
-        bonus: order.bonus
-      });
-    }
-    if (order.productId) {
-      const product = order.productId;
-      const sendDate = new Date(order.paidAt);
-      sendDate.setDate(sendDate.getDate() + 30);
-      products.push({
-        title: product.title,
-        sendDate: sendDate.toISOString(),
-        transactionId: order.transactionId,
-        bonus: order.bonus
-      });
+      if (order.productId) {
+        const product = order.productId;
+        const sendDate = new Date(order.paidAt);
+        sendDate.setDate(sendDate.getDate() + 30);
+        const expirationDate = new Date(sendDate.getFullYear() + 1, 0, 1);
+        products.push({
+          title: product.title,
+          sendDate: sendDate.toISOString(),
+          expirationDate: expirationDate.toISOString(),
+          transactionId: order.transactionId,
+          bonus: order.bonus
+        });
+      }
     }
   });
 
