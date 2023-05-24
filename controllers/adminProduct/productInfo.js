@@ -1,21 +1,33 @@
+const ObjectId = require('mongoose').Types.ObjectId;
 const validator = require('validator');
 const successHandler = require('../../services/successHandler');
 const appError = require('../../services/appError');
 const handleErrorAsync = require('../../services/handleErrorAsync');
 const Product = require('../../models/productsModel');
+const Order = require('../../models/ordersModel');
 
 const getProduct = handleErrorAsync(async (req, res, next) => {
   const { productId } = req.params;
-  if (!productId) {
+
+  if (!productId || !ObjectId.isValid(productId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
-  const product = await Product.findById(productId);
+  const product = await Product.findById(productId).lean().exec();
+  const orders = await Order.find({ productId });
   if (product.creator?.toString() !== req.user.id) {
     return next(appError(403, '您無權限瀏覽此商品資料'));
   }
   if (!product) {
     return next(appError(400, '取得商品資料失敗，查無商品'));
   }
+  product.orderCount = orders?.length;
+  product.orderSuccess = orders?.filter((x) => x.paymentStatus == 1)?.length;
+  product.orderUnpaidAmount = orders
+    ?.filter((x) => x.paymentStatus == 0)
+    ?.reduce((acc, cur) => acc + cur.total, 0);
+  product.orderUnpaidCount = orders?.filter(
+    (x) => x.paymentStatus == 0
+  )?.length;
   successHandler(res, '取得商品資料成功', product);
 });
 
