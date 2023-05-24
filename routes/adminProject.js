@@ -45,6 +45,11 @@ router.patch(
   ProjectController.handleUpdateProjectSetting
 );
 router.patch(
+  '/:id/info/abled',
+  isAdmin,
+  ProjectController.handleUpdateProjectAbled
+);
+router.patch(
   '/:projId/team/:teamId',
   isAdmin,
   ProjectController.handleUpdateTeam

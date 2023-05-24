@@ -19,8 +19,7 @@ const handleUpdateProjectSetting = handleErrorAsync(async (req, res, next) => {
     isShowTarget,
     url,
     isLimit,
-    seoDescription,
-    isAbled
+    seoDescription
   } = req.body;
 
   if (!req.params.id || !ObjectId.isValid(req.params.id)) {
@@ -80,13 +79,6 @@ const handleUpdateProjectSetting = handleErrorAsync(async (req, res, next) => {
     !validator.isIn(isLimit.toString(), ['0', '1'])
   ) {
     errArray.push('“庫存限量標示”格式不正確，請聯絡管理員');
-  }
-
-  if (
-    (isAbled === 0 ? '0' : isAbled) &&
-    !validator.isIn(isAbled.toString(), ['0', '1'])
-  ) {
-    errArray.push('“是否啓用”格式不正確，請聯絡管理員');
   }
 
   //is relative url
