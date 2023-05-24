@@ -19,6 +19,11 @@ const handleConvertIntoProduct = handleErrorAsync(async (req, res, next) => {
   if (proj.isCommercialized === 1) {
     return next(appError(400, '此專案已轉爲商品'));
   }
+  if (proj.status !== 'complete') {
+    return next(
+      appError(400, '專案尚未啓用，或募資期間尚未結束，故無法轉成商品')
+    );
+  }
   const {
     _id,
     startTime,
