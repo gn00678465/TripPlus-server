@@ -34,7 +34,7 @@ const getProduct = handleErrorAsync(async (req, res, next) => {
 const editProductImage = handleErrorAsync(async (req, res, next) => {
   const { keyVision, video } = req.body;
   const { productId } = req.params;
-  if (!productId) {
+  if (!productId || !ObjectId.isValid(productId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);
@@ -79,7 +79,7 @@ const editProductSetting = handleErrorAsync(async (req, res, next) => {
     seoDescription
   } = req.body;
   const { productId } = req.params;
-  if (!productId) {
+  if (!productId || !ObjectId.isValid(productId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);
@@ -135,7 +135,7 @@ const editProductSetting = handleErrorAsync(async (req, res, next) => {
 const editProductPayment = handleErrorAsync(async (req, res, next) => {
   const { payment, isAllowInstallment, atmDeadline, csDeadline } = req.body;
   const { productId } = req.params;
-  if (!productId) {
+  if (!productId || !ObjectId.isValid(productId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);

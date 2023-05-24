@@ -1,3 +1,4 @@
+const ObjectId = require('mongoose').Types.ObjectId;
 const validator = require('validator');
 const successHandler = require('../../services/successHandler');
 const appError = require('../../services/appError');
@@ -7,10 +8,9 @@ const Plan = require('../../models/plansModel');
 
 const getProductPlans = handleErrorAsync(async (req, res, next) => {
   const { productId } = req.params;
-  if (!productId) {
-    return appError(400, '路由資訊錯誤');
+  if (!productId || !ObjectId.isValid(productId)) {
+    return next(appError(400, '路由資訊錯誤'));
   }
-  const product = await Product.findById(productId);
   if (!product) {
     return next(appError(400, '查無商品'));
   }
@@ -23,7 +23,7 @@ const getProductPlans = handleErrorAsync(async (req, res, next) => {
 const createProductPlan = handleErrorAsync(async (req, res, next) => {
   const { title, price, content, isAllowMulti } = req.body;
   const { productId } = req.params;
-  if (!productId) {
+  if (!productId || !ObjectId.isValid(productId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);
@@ -61,7 +61,12 @@ const createProductPlan = handleErrorAsync(async (req, res, next) => {
 const editProductPlan = handleErrorAsync(async (req, res, next) => {
   const { productId, planId } = req.params;
   const { title, price, content, isAllowMulti } = req.body;
-  if (!productId || !planId) {
+  if (
+    !productId ||
+    !ObjectId.isValid(productId) ||
+    !planId ||
+    !ObjectId.isValid(planId)
+  ) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);
@@ -109,7 +114,12 @@ const editProductPlan = handleErrorAsync(async (req, res, next) => {
 });
 const delProductPlan = handleErrorAsync(async (req, res, next) => {
   const { productId, planId } = req.params;
-  if (!productId || !planId) {
+  if (
+    !productId ||
+    !ObjectId.isValid(productId) ||
+    !planId ||
+    !ObjectId.isValid(planId)
+  ) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);
