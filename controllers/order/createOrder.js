@@ -84,7 +84,7 @@ const handleCreateOrder = handleErrorAsync(async (req, res, next) => {
   }
   if (
     !mongoose.Types.ObjectId.isValid(projectId) ||
-    !mongoose.Types.ObjectId.isValid(projectId)
+    !mongoose.Types.ObjectId.isValid(productId)
   ) {
     return next(appError(400, '專案或商品 id 資訊錯誤'));
   }
