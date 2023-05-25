@@ -42,6 +42,21 @@ const editAbled = handleErrorAsync(async (req, res, next) => {
     if (!product.seoDescription) {
       errMsgAry.push('SEO 描述');
     }
+    if (!validator.isInt(product.price.toString(), { gt: 0 })) {
+      errMsgAry.push('商品金額應為大於 0 的整數數值');
+    }
+    if (!product.location) {
+      errMsgAry.push('商品產地');
+    }
+    if (!product.material) {
+      errMsgAry.push('商品材質');
+    }
+    if (!product.size) {
+      errMsgAry.push('商品尺寸');
+    }
+    if (!product.weight) {
+      errMsgAry.push('商品重量');
+    }
     if (!(product.payment === 0 ? '0' : product.payment)) {
       errMsgAry.push('付款方式');
     }
