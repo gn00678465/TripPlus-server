@@ -11,6 +11,7 @@ const getProductPlans = handleErrorAsync(async (req, res, next) => {
   if (!productId || !ObjectId.isValid(productId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
+  const product = await Product.findById(productId);
   if (!product) {
     return next(appError(400, '查無商品'));
   }
