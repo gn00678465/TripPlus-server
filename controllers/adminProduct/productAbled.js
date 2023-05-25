@@ -42,8 +42,8 @@ const editAbled = handleErrorAsync(async (req, res, next) => {
     if (!product.seoDescription) {
       errMsgAry.push('SEO 描述');
     }
-    if (!validator.isInt(product.price.toString(), { gt: 0 })) {
-      errMsgAry.push('商品金額應為大於 0 的整數數值');
+    if (!product.price) {
+      errMsgAry.push('商品金額');
     }
     if (!product.location) {
       errMsgAry.push('商品產地');

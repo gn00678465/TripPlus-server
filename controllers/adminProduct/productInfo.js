@@ -102,7 +102,9 @@ const editProductSetting = handleErrorAsync(async (req, res, next) => {
   ) {
     errMsgAry.push('庫存限量是否顯示格式不正確');
   }
-
+  if (!validator.isInt(price.toString(), { gt: 0 })) {
+    errMsgAry.push('商品金額金額應為大於 0 的整數數值');
+  }
   if (
     url &&
     !validator.isURL(url, {
