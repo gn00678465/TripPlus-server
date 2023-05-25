@@ -1,3 +1,4 @@
+const ObjectId = require('mongoose').Types.ObjectId;
 const successHandler = require('../../services/successHandler');
 const appError = require('../../services/appError');
 const handleErrorAsync = require('../../services/handleErrorAsync');
@@ -6,7 +7,12 @@ const Team = require('../../models/teamsModel');
 
 const getTeam = handleErrorAsync(async (req, res, next) => {
   const { productId, teamId } = req.params;
-  if (!productId || !teamId) {
+  if (
+    !productId ||
+    !ObjectId.isValid(productId) ||
+    !teamId ||
+    !ObjectId.isValid(teamId)
+  ) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);

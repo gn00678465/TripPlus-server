@@ -1,28 +1,40 @@
+const ObjectId = require('mongoose').Types.ObjectId;
 const validator = require('validator');
 const successHandler = require('../../services/successHandler');
 const appError = require('../../services/appError');
 const handleErrorAsync = require('../../services/handleErrorAsync');
 const Product = require('../../models/productsModel');
+const Order = require('../../models/ordersModel');
 
 const getProduct = handleErrorAsync(async (req, res, next) => {
   const { productId } = req.params;
-  if (!productId) {
+
+  if (!productId || !ObjectId.isValid(productId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
-  const product = await Product.findById(productId);
+  const product = await Product.findById(productId).lean().exec();
+  const orders = await Order.find({ productId });
   if (product.creator?.toString() !== req.user.id) {
     return next(appError(403, '您無權限瀏覽此商品資料'));
   }
   if (!product) {
     return next(appError(400, '取得商品資料失敗，查無商品'));
   }
+  product.orderCount = orders?.length;
+  product.orderSuccess = orders?.filter((x) => x.paymentStatus == 1)?.length;
+  product.orderUnpaidAmount = orders
+    ?.filter((x) => x.paymentStatus == 0)
+    ?.reduce((acc, cur) => acc + cur.total, 0);
+  product.orderUnpaidCount = orders?.filter(
+    (x) => x.paymentStatus == 0
+  )?.length;
   successHandler(res, '取得商品資料成功', product);
 });
 
 const editProductImage = handleErrorAsync(async (req, res, next) => {
   const { keyVision, video } = req.body;
   const { productId } = req.params;
-  if (!productId) {
+  if (!productId || !ObjectId.isValid(productId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);
@@ -64,11 +76,10 @@ const editProductSetting = handleErrorAsync(async (req, res, next) => {
     weight,
     url,
     isLimit,
-    seoDescription,
-    isAbled
+    seoDescription
   } = req.body;
   const { productId } = req.params;
-  if (!productId) {
+  if (!productId || !ObjectId.isValid(productId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);
@@ -91,12 +102,8 @@ const editProductSetting = handleErrorAsync(async (req, res, next) => {
   ) {
     errMsgAry.push('庫存限量是否顯示格式不正確');
   }
-
-  if (
-    (isAbled === 0 ? '0' : isAbled) &&
-    !validator.isIn(isAbled.toString(), ['0', '1'])
-  ) {
-    errMsgAry.push('是否啓用格式不正確');
+  if (!validator.isInt(price.toString(), { gt: 0 })) {
+    errMsgAry.push('商品金額金額應為大於 0 的整數數值');
   }
   if (
     url &&
@@ -130,7 +137,7 @@ const editProductSetting = handleErrorAsync(async (req, res, next) => {
 const editProductPayment = handleErrorAsync(async (req, res, next) => {
   const { payment, isAllowInstallment, atmDeadline, csDeadline } = req.body;
   const { productId } = req.params;
-  if (!productId) {
+  if (!productId || !ObjectId.isValid(productId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);

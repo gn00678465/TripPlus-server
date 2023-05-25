@@ -1,3 +1,4 @@
+const ObjectId = require('mongoose').Types.ObjectId;
 const validator = require('validator');
 const successHandler = require('../../services/successHandler');
 const appError = require('../../services/appError');
@@ -7,7 +8,7 @@ const Faqs = require('../../models/faqsModel');
 
 const getProductFaqs = handleErrorAsync(async (req, res, next) => {
   const { productId } = req.params;
-  if (!productId) {
+  if (!productId || !ObjectId.isValid(productId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);
@@ -24,7 +25,7 @@ const getProductFaqs = handleErrorAsync(async (req, res, next) => {
 const createProductFaq = handleErrorAsync(async (req, res, next) => {
   const { question, answer, isPublish } = req.body;
   const { productId } = req.params;
-  if (!productId) {
+  if (!productId || !ObjectId.isValid(productId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);
@@ -60,7 +61,12 @@ const createProductFaq = handleErrorAsync(async (req, res, next) => {
 const editProductFaq = handleErrorAsync(async (req, res, next) => {
   const { productId, faqId } = req.params;
   const { question, answer, isPublish } = req.body;
-  if (!productId || !faqId) {
+  if (
+    !productId ||
+    !ObjectId.isValid(productId) ||
+    !faqId ||
+    !ObjectId.isValid(faqId)
+  ) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);
@@ -114,7 +120,12 @@ const editProductFaq = handleErrorAsync(async (req, res, next) => {
 const delProductFaq = handleErrorAsync(async (req, res, next) => {
   const { productId, faqId } = req.params;
 
-  if (!productId || !faqId) {
+  if (
+    !productId ||
+    !ObjectId.isValid(productId) ||
+    !faqId ||
+    !ObjectId.isValid(faqId)
+  ) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);

@@ -104,6 +104,11 @@ productSchema.virtual('comments', {
   foreignField: 'productId',
   localField: '_id'
 });
+productSchema.virtual('plans', {
+  ref: 'plans',
+  foreignField: 'productId',
+  localField: '_id'
+});
 
 //狀態
 productSchema.virtual('status').get(function () {

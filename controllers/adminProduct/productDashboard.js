@@ -1,3 +1,4 @@
+const ObjectId = require('mongoose').Types.ObjectId;
 const successHandler = require('../../services/successHandler');
 const appError = require('../../services/appError');
 const handleErrorAsync = require('../../services/handleErrorAsync');
@@ -8,7 +9,7 @@ const Comment = require('../../models/commentsModel');
 
 const getProductIndex = handleErrorAsync(async (req, res, next) => {
   const { productId } = req.params;
-  if (!productId) {
+  if (!productId || !ObjectId.isValid(productId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);

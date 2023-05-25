@@ -1,3 +1,4 @@
+const ObjectId = require('mongoose').Types.ObjectId;
 const successHandler = require('../../services/successHandler');
 const appError = require('../../services/appError');
 const handleErrorAsync = require('../../services/handleErrorAsync');
@@ -5,7 +6,7 @@ const Product = require('../../models/productsModel');
 
 const getProductContent = handleErrorAsync(async (req, res, next) => {
   const { productId } = req.params;
-  if (!productId) {
+  if (!productId || !ObjectId.isValid(productId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);
@@ -20,7 +21,7 @@ const getProductContent = handleErrorAsync(async (req, res, next) => {
 const editProductContent = handleErrorAsync(async (req, res, next) => {
   const { productId } = req.params;
   const { content } = req.body;
-  if (!productId) {
+  if (!productId || !ObjectId.isValid(productId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
   const product = await Product.findById(productId);
