@@ -82,11 +82,11 @@ const handleCreateOrder = handleErrorAsync(async (req, res, next) => {
   if (projectId && productId) {
     return next(appError(400, '專案 id 或商品 id 請擇一填寫'));
   }
-  if (
-    !mongoose.Types.ObjectId.isValid(projectId) ||
-    !mongoose.Types.ObjectId.isValid(productId)
-  ) {
-    return next(appError(400, '專案或商品 id 資訊錯誤'));
+  if (projectId && !mongoose.Types.ObjectId.isValid(projectId)) {
+    return next(appError(400, '專案 id 資訊錯誤'));
+  }
+  if (productId && !mongoose.Types.ObjectId.isValid(productId)) {
+    return next(appError(400, '商品 id 資訊錯誤'));
   }
   if (projectId) {
     project = await Project.findById(projectId);
