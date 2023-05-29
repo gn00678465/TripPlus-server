@@ -6,9 +6,13 @@ const Project = require('../../models/projectsModel');
 const Product = require('../../models/productsModel');
 
 const getFollows = handleErrorAsync(async (req, res, next) => {
-  const user = await User.findById(req.user.id).populate(
-    'follows.projectId follows.productId'
-  );
+  const user = await User.findById(req.user.id).populate({
+    path: 'follows',
+    populate: [
+      { path: 'projectId', populate: { path: 'teamId', select: 'title' } },
+      { path: 'productId', populate: { path: 'teamId', select: 'title' } }
+    ]
+  });
   if (!user) {
     return next(appError(400, '查無此使用者'));
   }
