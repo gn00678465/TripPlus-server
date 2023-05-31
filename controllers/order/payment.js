@@ -188,11 +188,8 @@ const handlePayment = handleErrorAsync(async (req, res, next) => {
     ReturnURL: process.env.PaymentReturnURL,
     ChoosePayment: 'Credit',
     EncryptType: 1,
-    //NeedExtraPaidInfo:1
-    //BindingCard: 1
-    //OrderResultURL: 'http://192.168.0.1/payment_result'
-    // ItemURL: 'http://item.test.tw',
-    //Remark: '交易備註',
+    Remark: note,
+    ClientBackURL: 'https://frontend-development-mtbj.onrender.com',
     CustomField1: order.id
     // CustomField2: '',
     // CustomField3: '',
@@ -210,6 +207,8 @@ const handlePayment = handleErrorAsync(async (req, res, next) => {
       <input name="ReturnURL" value="${base_param.ReturnURL}" />
       <input name="ChoosePayment" value="${base_param.ChoosePayment}" />
       <input name="EncryptType" value="${base_param.EncryptType}" />
+      <input name="Remark" value="${base_param.Remark}" />
+      <input name="ClientBackURL" value="${base_param.ClientBackURL}" />
       <input name="CustomField1" value="${base_param.CustomField1}" />
       <input name="CheckMacValue" value="${generateCheckValue(base_param)}" />
       <button type="submit">Submit</button>
