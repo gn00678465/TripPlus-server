@@ -290,12 +290,30 @@
           headers: {
             Authorization: auth
           }
-        }).then((res) => {
-          const newDiv = document.createElement('div');
-          newDiv.innerHTML = res.data.data;
-          document.querySelector('#container').appendChild(newDiv);
-          document.forms['payment'].submit();
-        });
+        })
+          .then((res) => {
+            const newDiv = document.createElement('div');
+            newDiv.innerHTML = res.data.data;
+            document.querySelector('#container').appendChild(newDiv);
+            document.forms['payment'].submit();
+          })
+          .catch((error) => {
+            if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+              alert(error.response.data.message);
+              // alert(error.response.status);
+              // alert(error.response.headers);
+            } else if (error.request) {
+              // The request was made but no response was received
+              // `error.request` is an instance of XMLHttpRequest in the browser
+              // and an instance of http.ClientRequest in node.js
+              alert(error.request);
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              alert('Error', error.message);
+            }
+          });
       });
     </script>
   </body>
