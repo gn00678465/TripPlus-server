@@ -1,5 +1,5 @@
 const handlePayment = require('./payment');
-const handleCreateOrder = require('./createOrder');
+const handleUpdateOrder = require('./updateOrder');
 
 module.exports.handlePayment = handlePayment;
-module.exports.handleCreateOrder = handleCreateOrder;
+module.exports.handleUpdateOrder = handleUpdateOrder;

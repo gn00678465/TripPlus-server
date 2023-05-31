@@ -9,10 +9,9 @@ const handleErrorAsync = require('../../services/handleErrorAsync');
 const Order = require('../../models/ordersModel');
 const Project = require('../../models/projectsModel');
 const Product = require('../../models/productsModel');
-const Plan = require('../../models/plansModel');
 const User = require('../../models/usersModel');
 
-const handleCreateOrder = handleErrorAsync(async (req, res, next) => {
+const handleUpdateOrder = handleErrorAsync(async (req, res, next) => {
   console.log(req);
   const { RtnCode, TradeAmt, PaymentDate, CustomField1 } = req.body;
 
@@ -110,4 +109,4 @@ const handleCreateOrder = handleErrorAsync(async (req, res, next) => {
     });
 });
 
-module.exports = handleCreateOrder;
+module.exports = handleUpdateOrder;
