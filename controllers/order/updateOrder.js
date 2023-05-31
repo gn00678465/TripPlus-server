@@ -13,8 +13,9 @@ const User = require('../../models/usersModel');
 
 const handleUpdateOrder = handleErrorAsync(async (req, res, next) => {
   const { RtnCode, TradeAmt, PaymentDate, CustomField1 } = req.body;
+  console.log(RtnCode);
 
-  if (RtnCode === 1) {
+  if (RtnCode == 1) {
     //付款成功
     const order = await Order.findById(CustomField1);
 
