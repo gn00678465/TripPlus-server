@@ -14,8 +14,6 @@ const Product = require('../../models/productsModel');
 const Plan = require('../../models/plansModel');
 const Order = require('../../models/ordersModel');
 
-const options = require('../../config/config-payment');
-
 const phoneRule =
   /(\d{2,3}-?|\(\d{2,3}\))\d{3,4}-?\d{4}|09\d{2}(\d{6}|-\d{3}-\d{3})/;
 
@@ -182,7 +180,7 @@ const handlePayment = handleErrorAsync(async (req, res, next) => {
   }
   // ECPay
   let base_param = {
-    MerchantID: options?.MercProfile?.MerchantID,
+    MerchantID: process.env.MerchantID,
     MerchantTradeNo, //請帶20碼uid, ex: f0a0d7e9fae1bb72bc93
     MerchantTradeDate: moment().format('YYYY/MM/DD HH:mm:ss'), //ex: 2017/02/13 15:45:30
     PaymentType: 'aio',
@@ -227,9 +225,9 @@ function generateCheckValue(params) {
     return a[0].localeCompare(b[0]);
   });
   let result =
-    `HashKey=${options?.MercProfile?.HashKey}&` +
+    `HashKey=${process.env.HashKey}&` +
     entries.map((x) => `${x[0]}=${x[1]}`).join('&') +
-    `&HashIV=${options?.MercProfile?.HashIV}`;
+    `&HashIV=${process.env.HashIV}`;
   result = encodeURIComponent(result).toLowerCase();
   //follow guidence from ECPay https://www.ecpay.com.tw/CascadeFAQ/CascadeFAQ_Qa?nID=1197
   result = result
