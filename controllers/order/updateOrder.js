@@ -19,7 +19,7 @@ const handleUpdateOrder = handleErrorAsync(async (req, res, next) => {
     //付款成功
     const order = await Order.findById(CustomField1);
 
-    const user = User.findById(order.member);
+    const user = await User.findById(order.member);
     let project = null;
     let product = null;
     if (order.projectId) {
