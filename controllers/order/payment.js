@@ -170,6 +170,10 @@ const handlePayment = handleErrorAsync(async (req, res, next) => {
     ...req.body
   });
 
+  if (!order) {
+    return next(appError(500, '訂單資訊處理錯誤，請再試一次'));
+  }
+
   let ItemName = '';
   if (projectId) {
     ItemName = `${project.title} - ${plan.title}`;
