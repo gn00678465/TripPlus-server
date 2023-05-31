@@ -166,7 +166,7 @@ const handlePayment = handleErrorAsync(async (req, res, next) => {
   const MerchantTradeNo = uid();
   const order = await Order.create({
     member: req.user.id,
-    transactionId: uid,
+    transactionId: MerchantTradeNo,
     ...req.body
   });
 

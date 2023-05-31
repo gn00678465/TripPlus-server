@@ -14,10 +14,7 @@ const User = require('../../models/usersModel');
 const handleUpdateOrder = handleErrorAsync(async (req, res, next) => {
   const { RtnCode, TradeAmt, PaymentDate, CustomField1 } = req.body;
 
-  const order = await Order.findById(CustomField1).lean().exec();
-  order.bonus = Math.floor(TradeAmt * 0.005);
-  order.payat = new Date(PaymentDate).toISOString();
-  order.paystatus = RtnCode === 1 ? 1 : 0;
+  const order = await Order.findById(CustomField1);
 
   const user = User.findById(order.member);
   let project = null;
@@ -41,7 +38,13 @@ const handleUpdateOrder = handleErrorAsync(async (req, res, next) => {
       session.startTransaction();
       newOrder = await Order.findByIdAndUpdate(
         order.id,
-        order,
+        {
+          $set: {
+            bonus: Math.floor(TradeAmt * 0.005),
+            paidAt: new Date(PaymentDate).toISOString(),
+            paymentStatus: RtnCode === 1 ? 1 : 0
+          }
+        },
         { new: true, runValidators: true },
         { session }
       );
