@@ -1,26 +1,27 @@
+const moment = require('moment');
+const { default: ShortUniqueId } = require('short-unique-id');
+const SHA256 = require('crypto-js/sha256');
+
 const mongoose = require('mongoose');
 const validator = require('validator');
 
 const successHandler = require('../../services/successHandler');
-
 const appError = require('../../services/appError');
 const handleErrorAsync = require('../../services/handleErrorAsync');
 
-const Order = require('../../models/ordersModel');
 const Project = require('../../models/projectsModel');
 const Product = require('../../models/productsModel');
 const Plan = require('../../models/plansModel');
-const User = require('../../models/usersModel');
+const Order = require('../../models/ordersModel');
 
 const phoneRule =
   /(\d{2,3}-?|\(\d{2,3}\))\d{3,4}-?\d{4}|09\d{2}(\d{6}|-\d{3}-\d{3})/;
 
-const handleCreateOrder = handleErrorAsync(async (req, res, next) => {
+const handlePayment = handleErrorAsync(async (req, res, next) => {
   const {
     projectId,
     productId,
     planId,
-    transactionId,
     payment,
     fundPrice,
     count,
@@ -37,14 +38,7 @@ const handleCreateOrder = handleErrorAsync(async (req, res, next) => {
     recipient,
     recipientPhone,
     recipientEmail,
-    creditCard,
-    note,
-    bonus,
-    paidAt,
-    paymentStatus,
-    shipmentId,
-    shipDate,
-    shipmentStatus
+    note
   } = req.body;
 
   //必填欄位
@@ -161,112 +155,93 @@ const handleCreateOrder = handleErrorAsync(async (req, res, next) => {
   if (!validator.isEmail(recipientEmail)) {
     errArray.push('收件人 email 格式不正確');
   }
-  if (creditCard && !validator.isCreditCard(creditCard)) {
-    errArray.push('信用卡格式不正確');
-  }
-  if (
-    (bonus === 0 ? '0' : bonus) &&
-    !validator.isInt(bonus.toString(), { min: 0 })
-  ) {
-    errArray.push('紅利點數應爲 0 或正整數');
-  }
-  if (paidAt && !validator.isISO8601(paidAt)) {
-    //is date & time
-    errArray.push('付款日期時間格式不正確');
-  }
-  if (
-    (paymentStatus === 0 ? '0' : paymentStatus) &&
-    !validator.isIn(paymentStatus.toString(), ['0', '1'])
-  ) {
-    errArray.push('付款狀態格式錯誤，請聯絡管理員');
-  }
-  if (shipDate && !validator.isISO8601(shipDate)) {
-    //is date & time
-    errArray.push('出貨日期時間格式不正確');
-  }
-  if (
-    (shipmentStatus === 0 ? '0' : shipmentStatus) &&
-    !validator.isIn(shipmentStatus.toString(), ['0', '1', '2'])
-  ) {
-    errArray.push('物流狀態格式錯誤，請聯絡管理員');
-  }
 
   if (errArray.length > 0) {
     return next(appError(400, errArray.join('&')));
   }
 
-  // transaction
-  let session = null;
-  let newOrder = null;
-  Order.createCollection()
-    .then(() => {
-      return mongoose.startSession();
-    })
-    .then(async (_session) => {
-      session = _session;
-      session.startTransaction();
-      newOrder = await Order.create(
-        [
-          {
-            member: req.user.id,
-            ...req.body
-          }
-        ],
-        { session }
-      );
-      return newOrder;
-    })
-    .then(() => {
-      if (projectId) {
-        return Project.findByIdAndUpdate(
-          projectId,
-          {
-            $set: {
-              sum: project.sum + fundPrice * count + (extraFund ?? 0),
-              sponsorCount: project.sponsorCount + 1
-            }
-          },
-          { runValidators: true },
-          { session }
-        );
-      }
-      if (productId) {
-        return Product.findByIdAndUpdate(
-          productId,
-          {
-            $set: {
-              sum: product.sum + fundPrice * count,
-              buyerCount: product.buyerCount + 1
-            }
-          },
-          { runValidators: true },
-          { session }
-        );
-      }
-    })
-    .then(() => {
-      return User.findByIdAndUpdate(
-        req.user._id,
-        {
-          $set: {
-            bonus: (req.user.bonus ?? 0) + (bonus ?? 0) - (bonusDiscount ?? 0)
-          }
-        },
-        { runValidators: true },
-        { session }
-      );
-    })
-    .then(async () => {
-      await session.commitTransaction();
-      successHandler(res, '新增訂單成功', newOrder);
-    })
-    .catch(async (error) => {
-      await session.abortTransaction();
-      return next(appError(500, '新增訂單資料失敗'));
-    })
-    .finally(async () => {
-      await session.endSession();
-    });
+  const uid = new ShortUniqueId({ length: 20 });
+  const MerchantTradeNo = uid();
+  const order = await Order.create({
+    member: req.user.id,
+    transactionId: MerchantTradeNo,
+    ...req.body
+  });
+
+  if (!order) {
+    return next(appError(500, '訂單資訊處理錯誤，請再試一次'));
+  }
+
+  let ItemName = '';
+  if (projectId) {
+    ItemName = `${project.title} - ${plan.title}`;
+  } else if (productId) {
+    ItemName = `${product.title} - ${plan.title}`;
+  }
+  // ECPay
+  let base_param = {
+    MerchantID: process.env.MerchantID,
+    MerchantTradeNo, //請帶20碼uid, ex: f0a0d7e9fae1bb72bc93
+    MerchantTradeDate: moment().format('YYYY/MM/DD HH:mm:ss'), //ex: 2017/02/13 15:45:30
+    PaymentType: 'aio',
+    TotalAmount: total,
+    TradeDesc: 'Trip Plus+ 募資平臺',
+    ItemName,
+    ReturnURL: process.env.PaymentReturnURL,
+    ChoosePayment: 'Credit',
+    EncryptType: 1,
+    Remark: note,
+    ClientBackURL: 'https://frontend-development-mtbj.onrender.com',
+    CustomField1: order.id
+    // CustomField2: '',
+    // CustomField3: '',
+    // CustomField4: ''
+  };
+  const form = `
+    <form action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5" method="POST" name="payment" style="display: none;">
+      <input name="MerchantID" value="${base_param.MerchantID}"/>
+      <input name="MerchantTradeNo" value="${base_param.MerchantTradeNo}" />
+      <input name="MerchantTradeDate" value="${base_param.MerchantTradeDate}" />
+      <input name="PaymentType" value="${base_param.PaymentType}" />
+      <input name="TotalAmount" value="${base_param.TotalAmount}" />
+      <input name="TradeDesc" value="${base_param.TradeDesc}" />
+      <input name="ItemName" value="${base_param.ItemName}" />
+      <input name="ReturnURL" value="${base_param.ReturnURL}" />
+      <input name="ChoosePayment" value="${base_param.ChoosePayment}" />
+      <input name="EncryptType" value="${base_param.EncryptType}" />
+      <input name="Remark" value="${base_param.Remark}" />
+      <input name="ClientBackURL" value="${base_param.ClientBackURL}" />
+      <input name="CustomField1" value="${base_param.CustomField1}" />
+      <input name="CheckMacValue" value="${generateCheckValue(base_param)}" />
+      <button type="submit">Submit</button>
+    </form>
+  `;
+  successHandler(res, '取得付款資訊成功', form);
 });
 
-module.exports = handleCreateOrder;
+function generateCheckValue(params) {
+  const entries = Object.entries(params);
+  entries.sort((a, b) => {
+    return a[0].localeCompare(b[0]);
+  });
+  let result =
+    `HashKey=${process.env.HashKey}&` +
+    entries.map((x) => `${x[0]}=${x[1]}`).join('&') +
+    `&HashIV=${process.env.HashIV}`;
+  result = encodeURIComponent(result).toLowerCase();
+  //follow guidence from ECPay https://www.ecpay.com.tw/CascadeFAQ/CascadeFAQ_Qa?nID=1197
+  result = result
+    .replace(/%2d/g, '-')
+    .replace(/%5f/g, '_')
+    .replace(/%2e/g, '.')
+    .replace(/%21/g, '!')
+    .replace(/%2a/g, '*')
+    .replace(/%28/g, '(')
+    .replace(/%29/g, ')')
+    .replace(/%20/g, '+');
+
+  result = SHA256(result).toString();
+  return result.toUpperCase();
+}
+
+module.exports = handlePayment;
