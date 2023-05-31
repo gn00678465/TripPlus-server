@@ -64,6 +64,11 @@ app.use('/proposer', proposerRouter);
 app.use('/message', messageRouter);
 app.use('/home', homeRouter);
 
+//for test
+app.get('/paymentTester', (req, res, next) => {
+  res.sendFile(path.join(__dirname + '/paymentTester.html'));
+});
+
 // 404 Not Found
 app.use(function (req, res, next) {
   res.status(404).json({

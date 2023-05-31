@@ -10,6 +10,19 @@ const Project = require('../../models/projectsModel');
 const Team = require('../../models/teamsModel');
 
 const handleCreateProject = handleErrorAsync(async (req, res, next) => {
+  // #swagger.start
+  /*
+  #swagger.path = '/admin/project/'
+  #swagger.tags = ['Admin Project']
+  #swagger.method = 'post'
+  #swagger.description = '新增專案'
+  #swagger.parameters['authorization'] = {
+    in: "header",
+    type: "string",
+    required: true,
+    description: "管理員帳號 token"
+  }
+  */
   const { title, teamName, category, startTime, endTime, target, keyVision } =
     req.body;
 
@@ -104,6 +117,7 @@ const handleCreateProject = handleErrorAsync(async (req, res, next) => {
     .finally(async () => {
       await session.endSession();
     });
+  // #swagger.end
 });
 
 module.exports = handleCreateProject;
