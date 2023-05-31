@@ -98,12 +98,12 @@ const handleUpdateOrder = handleErrorAsync(async (req, res, next) => {
         );
       })
       .then(async () => {
-        //console.log('success');
+        console.log('success');
         await session.commitTransaction();
         successHandler(res, '', {});
       })
       .catch(async (error) => {
-        //console.log(error);
+        console.log(error);
         await session.abortTransaction();
         return next(appError(500, ''));
       })
