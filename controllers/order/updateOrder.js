@@ -12,7 +12,6 @@ const Product = require('../../models/productsModel');
 const User = require('../../models/usersModel');
 
 const handleUpdateOrder = handleErrorAsync(async (req, res, next) => {
-  console.log(req);
   const { RtnCode, TradeAmt, PaymentDate, CustomField1 } = req.body;
 
   const order = await Order.findById(CustomField1).lean().exec();
@@ -21,8 +20,8 @@ const handleUpdateOrder = handleErrorAsync(async (req, res, next) => {
   order.paystatus = RtnCode === 1 ? 1 : 0;
 
   const user = User.findById(order.member);
-  const project = null;
-  const product = null;
+  let project = null;
+  let product = null;
   if (order.projectId) {
     project = await Project.findById(order.projectId);
   }
