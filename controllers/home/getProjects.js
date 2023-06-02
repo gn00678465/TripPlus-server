@@ -4,8 +4,15 @@ const Project = require('../../models/projectsModel');
 const Product = require('../../models/productsModel');
 
 const getProjects = handleErrorAsync(async (req, res, next) => {
-  const projects = await Project.find({ isAbled: 1 });
-  const products = await Product.find({ isAbled: 1 });
+  const projects = await Project.find({ isAbled: 1 }).populate({
+    path: 'teamId',
+    select: 'title'
+  });
+
+  const products = await Product.find({ isAbled: 1 }).populate({
+    path: 'teamId',
+    select: 'title'
+  });
 
   const result = {
     hot: projects.sort((a, b) => b.sponsorCount - a.sponsorCount).slice(0, 3),
