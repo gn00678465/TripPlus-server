@@ -89,7 +89,7 @@ const handleUpdateOrder = handleErrorAsync(async (req, res, next) => {
           order.planId,
           {
             $set: {
-              sponsorCount: (this.sponsorCount ?? 0) + 1
+              sponsorCount: (plan.sponsorCount ?? 0) + 1
             }
           },
           { runValidators: true },
