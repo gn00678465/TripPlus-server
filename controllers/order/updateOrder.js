@@ -9,6 +9,7 @@ const handleErrorAsync = require('../../services/handleErrorAsync');
 const Order = require('../../models/ordersModel');
 const Project = require('../../models/projectsModel');
 const Product = require('../../models/productsModel');
+const Plan = require('../../models/plansModel');
 const User = require('../../models/usersModel');
 
 const handleUpdateOrder = handleErrorAsync(async (req, res, next) => {
@@ -18,7 +19,6 @@ const handleUpdateOrder = handleErrorAsync(async (req, res, next) => {
   if (RtnCode == 1) {
     //付款成功
     const order = await Order.findById(CustomField1);
-
     const user = await User.findById(order.member);
     let project = null;
     let product = null;
@@ -28,6 +28,8 @@ const handleUpdateOrder = handleErrorAsync(async (req, res, next) => {
     if (order.productId) {
       product = await Product.findById(order.productId);
     }
+    const plan = await Plan.findById(order.planId);
+
     let session = null;
     let newOrder = null;
     Order.createCollection()
@@ -81,6 +83,18 @@ const handleUpdateOrder = handleErrorAsync(async (req, res, next) => {
             { session }
           );
         }
+      })
+      .then(() => {
+        return Plan.findByIdAndUpdate(
+          order.planId,
+          {
+            $set: {
+              sponsorCount: (this.sponsorCount ?? 0) + 1
+            }
+          },
+          { runValidators: true },
+          { session }
+        );
       })
       .then(() => {
         return User.findByIdAndUpdate(

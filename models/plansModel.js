@@ -33,6 +33,10 @@ const planSchema = mongoose.Schema(
       type: String,
       required: [true, '請輸入回饋方案内容']
     },
+    sponsorCount: {
+      type: Number,
+      default: 0
+    },
     isAllowMulti: {
       type: Number,
       default: 1
