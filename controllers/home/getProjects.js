@@ -20,7 +20,9 @@ const getProjects = handleErrorAsync(async (req, res, next) => {
       .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
       .slice(0, 3),
     classic: products.filter((item) => item.isSelected).slice(0, 3),
-    success: projects.filter((item) => item.status === 'complete').slice(0, 6)
+    success: projects
+      .filter((item) => item.status === 'complete' && item.progressRate >= 100)
+      .slice(0, 6)
   };
   successHandler(res, '取得首頁專案成功', result);
 });

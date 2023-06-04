@@ -22,7 +22,9 @@ const getProposer = handleErrorAsync(async (req, res, next) => {
   const projects = {
     all: proj.filter((item) => item.isAbled !== 0),
     progress: proj.filter((item) => item.status === 'progress'),
-    complete: proj.filter((item) => item.status === 'complete')
+    complete: proj.filter(
+      (item) => item.status === 'complete' && item.progressRate >= 100
+    )
   };
 
   const result = {
