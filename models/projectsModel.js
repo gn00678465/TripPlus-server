@@ -130,7 +130,7 @@ projectSchema.virtual('progressRate').get(function () {
 
 //倒數天數
 projectSchema.virtual('countDownDays').get(function () {
-  const days = Math.floor(
+  const days = Math.ceil(
     (Date.parse(this.endTime) - Date.now()) / (1000 * 60 * 60 * 24)
   );
   return days > 0 ? days : 0;
