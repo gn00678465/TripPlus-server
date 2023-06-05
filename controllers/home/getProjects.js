@@ -14,9 +14,14 @@ const getProjects = handleErrorAsync(async (req, res, next) => {
     select: 'title'
   });
 
+  const hotProjects = projects.filter((item) => item.countDownDays > 0);
+  const latestProjects = projects.filter((item) => item.countDownDays > 0);
+
   const result = {
-    hot: projects.sort((a, b) => b.sponsorCount - a.sponsorCount).slice(0, 3),
-    latest: projects
+    hot: hotProjects
+      .sort((a, b) => b.sponsorCount - a.sponsorCount)
+      .slice(0, 3),
+    latest: latestProjects
       .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
       .slice(0, 3),
     classic: products.filter((item) => item.isSelected).slice(0, 3),
