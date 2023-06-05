@@ -8,6 +8,12 @@ const bannersSchema = mongoose.Schema({
   },
   imageUrl: {
     type: String
+  },
+  link: {
+    type: String
+  },
+  type: {
+    type: String
   }
 });
 
