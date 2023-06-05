@@ -10,7 +10,8 @@ const googlePassport = passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: '/auth/google/callback'
+      callbackURL:
+        'https://trip-plus-server-dev.zeabur.app/auth/google/callback'
     },
     async (accessToken, refreshToken, profile, callback) => {
       try {
@@ -29,6 +30,7 @@ const googlePassport = passport.use(
         }
         return callback(null, user);
       } catch (err) {
+        console.log(err);
         return callback(err);
       }
     }
