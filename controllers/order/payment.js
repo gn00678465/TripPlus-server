@@ -188,6 +188,7 @@ const handlePayment = handleErrorAsync(async (req, res, next) => {
     TradeDesc: 'Trip Plus+ 募資平臺',
     ItemName,
     ReturnURL: process.env.PaymentReturnURL,
+    OrderResultURL: process.env.ClientReturnURL,
     ChoosePayment: 'Credit',
     EncryptType: 1,
     Remark: note,
@@ -207,6 +208,7 @@ const handlePayment = handleErrorAsync(async (req, res, next) => {
       <input name="TradeDesc" value="${base_param.TradeDesc}" />
       <input name="ItemName" value="${base_param.ItemName}" />
       <input name="ReturnURL" value="${base_param.ReturnURL}" />
+      <input name="OrderResultURL" value="${base_param.OrderResultURL}" />
       <input name="ChoosePayment" value="${base_param.ChoosePayment}" />
       <input name="EncryptType" value="${base_param.EncryptType}" />
       <input name="Remark" value="${base_param.Remark}" />
