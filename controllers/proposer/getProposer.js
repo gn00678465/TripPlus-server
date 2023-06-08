@@ -17,7 +17,10 @@ const getProposer = handleErrorAsync(async (req, res, next) => {
     return next(appError(500, '取得提案者資料失敗'));
   }
 
-  const proj = await Project.find({ teamId: teamId });
+  const proj = await Project.find({ teamId: teamId }).populate({
+    path: 'teamId',
+    select: 'title'
+  });
 
   const projects = {
     all: proj.filter((item) => item.isAbled !== 0),
