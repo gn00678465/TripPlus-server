@@ -1,5 +1,5 @@
 const express = require('express');
-const { isAuth, generateSendJWT } = require('../services/auth');
+const { isAuth, generateSendJWT, generateUrlJWT } = require('../services/auth');
 
 const router = express.Router();
 
@@ -25,7 +25,7 @@ router.get(
     failureMessage: true
   }),
   (req, res) => {
-    generateSendJWT(req.user, 201, res);
+    generateUrlJWT(req.user, res);
   }
 );
 
