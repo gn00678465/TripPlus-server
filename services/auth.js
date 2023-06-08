@@ -52,6 +52,19 @@ const generateSendJWT = (user, statusCode, res, isRememberMe = 0) => {
     }
   });
 };
+
+const generateUrlJWT = (user, res) => {
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_DAY
+  });
+
+  res.redirect(
+    `${process.env.CLIENT_URL}/google/callback?token=${token}&name=${
+      user.name
+    }&roles=${JSON.stringify(user.roles)}`
+  );
+};
+
 const isAdmin = handleErrorAsync(async (req, res, next) => {
   let token;
   if (
@@ -87,5 +100,6 @@ const isAdmin = handleErrorAsync(async (req, res, next) => {
 module.exports = {
   isAuth,
   generateSendJWT,
-  isAdmin
+  isAdmin,
+  generateUrlJWT
 };
