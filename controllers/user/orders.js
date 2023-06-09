@@ -23,7 +23,7 @@ const getOrders = handleErrorAsync(async (req, res, next) => {
     })
     .populate({
       path: 'planId',
-      select: 'title'
+      select: 'title price'
     });
   if (!orders) {
     return next(appError(400, '查無此訂單'));
