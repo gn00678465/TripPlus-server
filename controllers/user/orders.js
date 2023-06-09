@@ -7,7 +7,7 @@ const getOrders = handleErrorAsync(async (req, res, next) => {
   const orders = await Order.find({ member: req.user.id })
     .populate({
       path: 'projectId',
-      select: 'title',
+      select: 'title keyVision',
       populate: {
         path: 'teamId',
         select: 'title'
@@ -15,7 +15,7 @@ const getOrders = handleErrorAsync(async (req, res, next) => {
     })
     .populate({
       path: 'productId',
-      select: 'title',
+      select: 'title keyVision',
       populate: {
         path: 'teamId',
         select: 'title'
