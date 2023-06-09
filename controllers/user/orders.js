@@ -39,11 +39,11 @@ const getOrderDetails = handleErrorAsync(async (req, res, next) => {
   const order = await Order.findById(id)
     .populate({
       path: 'projectId',
-      select: 'title'
+      select: 'title keyVision'
     })
     .populate({
       path: 'productId',
-      select: 'title'
+      select: 'title keyVision'
     })
     .populate({
       path: 'planId',
