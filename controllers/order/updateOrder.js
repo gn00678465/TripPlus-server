@@ -31,6 +31,8 @@ const handleUpdateOrder = handleErrorAsync(async (req, res, next) => {
 
     let session = null;
     let newOrder = null;
+    const localPayTime = PaymentDate + ' GMT+0800';
+
     Order.createCollection()
       .then(() => {
         return mongoose.startSession();
@@ -43,7 +45,7 @@ const handleUpdateOrder = handleErrorAsync(async (req, res, next) => {
           {
             $set: {
               bonus: Math.floor(TradeAmt * 0.005),
-              paidAt: new Date(PaymentDate).toISOString(),
+              paidAt: new Date(localPayTime).toISOString(),
               paymentStatus: 1
             }
           },
