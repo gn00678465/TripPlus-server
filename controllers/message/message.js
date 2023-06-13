@@ -54,6 +54,41 @@ const getMemberMessages = handleErrorAsync(async (req, res, next) => {
 });
 const getProjectMessages = handleErrorAsync(async (req, res, next) => {
   const { projectId } = req.params;
+  const { id } = req.user;
+  if (!projectId || !ObjectId.isValid(projectId)) {
+    return next(appError(400, '路由資訊錯誤'));
+  }
+  const messages = await Message.find({
+    $and: [
+      { $or: [{ sender: id }, { receiver: id }] },
+      { projectId: projectId }
+    ]
+  })
+    .populate({
+      path: 'sender',
+      select: 'name nickName photo'
+    })
+    .populate({
+      path: 'receiver',
+      select: 'name nickName photo'
+    })
+    .populate({
+      path: 'projectId',
+      select: 'title'
+    })
+    .sort({ createdAt: -1 });
+  const project = await Project.findById(projectId);
+
+  if (!project) {
+    appError(400, '查無此專案');
+  }
+  if (!messages) {
+    return next(appError(500, '查無相關訊息'));
+  }
+  successHandler(res, '取得訊息', messages);
+});
+const getAdminProjectMessages = handleErrorAsync(async (req, res, next) => {
+  const { projectId } = req.params;
   if (!projectId || !ObjectId.isValid(projectId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
@@ -88,4 +123,9 @@ const getProjectMessages = handleErrorAsync(async (req, res, next) => {
   successHandler(res, '取得訊息', messages);
 });
 
-module.exports = { createMessages, getMemberMessages, getProjectMessages };
+module.exports = {
+  createMessages,
+  getMemberMessages,
+  getProjectMessages,
+  getAdminProjectMessages
+};

@@ -5,9 +5,10 @@ const messagesController = require('../controllers/message');
 
 router.post('/', isAuth, messagesController.createMessages);
 router.get('/member', isAuth, messagesController.getMemberMessages);
+router.get('/:projectId', isAuth, messagesController.getProjectMessages);
 router.get(
   '/project/:projectId',
   isAdmin,
-  messagesController.getProjectMessages
+  messagesController.getAdminProjectMessages
 );
 module.exports = router;
