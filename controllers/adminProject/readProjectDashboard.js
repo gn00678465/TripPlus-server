@@ -34,13 +34,14 @@ const handleReadProjDashboard = handleErrorAsync(async (req, res, next) => {
   const result = {
     id: req.params.id,
     projectTitle: proj.title,
+    projectCategory: proj.category,
     accumulatedAmount: proj.sum, //累計贊助金額
     targetAmount: proj.target, //募資目標金額
     accumulatedSponsor: proj.sponsorCount, //累計贊助人數
     followerAmount: followers.length, //活動追蹤人數
     unpaidOrder: orders.filter((x) => x.paymentStatus === 0).length, //待付款訂單
     paidOrder: orders.filter((x) => x.paymentStatus === 1).length, //已付款訂單
-    shipedOrder: orders.filter((x) => x.shipmentStatus > 0).length, //已出貨訂單
+    shippedOrder: orders.filter((x) => x.shipmentStatus > 0).length, //已出貨訂單
     progressRate: proj.progressRate, //募資進度 %
     countDownDays: proj.countDownDays //倒數天數
   };
