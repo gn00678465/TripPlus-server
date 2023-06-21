@@ -20,6 +20,9 @@ const getChatRoomMessages = handleErrorAsync(async (req, res, next) => {
   const currentPageSize = isPositiveInteger(pageSize)
     ? pageSize
     : defaultPageSize;
+  if (!roomId || !ObjectId.isValid(roomId)) {
+    return next(appError(400, '路由資訊錯誤'));
+  }
   const room = await Room.findById(roomId);
   if (!room) {
     return next(appError(400, '查無此聊天室窗'));
