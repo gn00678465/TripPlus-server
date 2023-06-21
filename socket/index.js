@@ -17,7 +17,6 @@ module.exports = (io) => {
           '以下欄位不可爲空：接收者 id、聊天訊息、room id 不可為空'
         );
       }
-      console.log(messagePayload);
       try {
         const message = await Message.create({
           sender,
@@ -25,7 +24,7 @@ module.exports = (io) => {
           content,
           roomId
         });
-        io.emit('message', { ...messagePayload });
+        io.to(roomId).emit('message', { ...messagePayload });
       } catch (error) {
         io.emit(error);
       }
