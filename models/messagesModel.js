@@ -15,10 +15,9 @@ const messageSchema = new mongoose.Schema(
       required: [true, '請填寫接收者 id'],
       ref: 'users'
     },
-    projectId: {
+    roomId: {
       type: mongoose.Schema.ObjectId,
-      required: [true, '請填寫專案 id'],
-      ref: 'projects'
+      ref: 'rooms'
     }
   },
   { timestamps: true }

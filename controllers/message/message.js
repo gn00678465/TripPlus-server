@@ -2,66 +2,34 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const successHandler = require('../../services/successHandler');
 const appError = require('../../services/appError');
 const handleErrorAsync = require('../../services/handleErrorAsync');
+const isPositiveInteger = require('../../helper/isPositiveInteger');
 const Message = require('../../models/messagesModel');
+const Room = require('../../models/roomsModel');
 const Project = require('../../models/projectsModel');
 
-const createMessages = handleErrorAsync(async (req, res, next) => {
-  const { receiver, content, projectId } = req.body;
-  const { id } = req.user;
-  if (!receiver || !content || !projectId) {
-    return next(
-      appError(400, '以下欄位不可爲空：接收者 id、聊天訊息、專案 id 不可為空')
-    );
-  }
-  const project = await Project.findById(projectId);
+const defaultPageSize = 10;
+const defaultPageIndex = 1;
 
-  if (!project) {
-    appError(400, '查無此專案');
-  }
-  if (project.creator?.toString() !== receiver) {
-    appError(400, '查無此專案發起人');
-  }
-  const newMessage = await Message.create({
-    sender: id,
-    receiver,
-    content,
-    projectId
-  });
-  if (!newMessage) {
-    return next(appError(500, '新增訊息失敗'));
-  }
-  successHandler(res, '新增訊息成功', newMessage);
-});
-const getMemberMessages = handleErrorAsync(async (req, res, next) => {
+const getChatRoomMessages = handleErrorAsync(async (req, res, next) => {
   const { id } = req.user;
-  const messages = await Message.find({
-    $or: [{ sender: id }, { receiver: id }]
-  })
-    .populate({
-      path: 'sender',
-      select: 'name nickName photo'
-    })
-    .populate({
-      path: 'receiver',
-      select: 'name nickName photo'
-    })
-    .sort({ createdAt: -1 });
-
-  if (!messages) {
-    return next(appError(500, '查無相關訊息'));
-  }
-  successHandler(res, '取得訊息', messages);
-});
-const getProjectMessages = handleErrorAsync(async (req, res, next) => {
-  const { projectId } = req.params;
-  const { id } = req.user;
-  if (!projectId || !ObjectId.isValid(projectId)) {
-    return next(appError(400, '路由資訊錯誤'));
+  const { roomId } = req.params;
+  const { pageIndex, pageSize } = req.query;
+  const currentPageIndex = isPositiveInteger(pageIndex)
+    ? pageIndex
+    : defaultPageIndex;
+  const currentPageSize = isPositiveInteger(pageSize)
+    ? pageSize
+    : defaultPageSize;
+  const room = await Room.findById(roomId);
+  if (!room) {
+    return next(appError(400, '查無此聊天室窗'));
   }
   const messages = await Message.find({
     $and: [
-      { $or: [{ sender: id }, { receiver: id }] },
-      { projectId: projectId }
+      { roomId },
+      {
+        $or: [{ sender: id }, { receiver: id }]
+      }
     ]
   })
     .populate({
@@ -73,59 +41,89 @@ const getProjectMessages = handleErrorAsync(async (req, res, next) => {
       select: 'name nickName photo'
     })
     .populate({
-      path: 'projectId',
-      select: 'title'
+      path: 'roomId',
+      populate: {
+        path: 'projectId',
+        select: 'title creator'
+      }
     })
-    .sort({ createdAt: -1 });
-  const project = await Project.findById(projectId);
+    .sort({ createdAt: -1 })
+    .skip((currentPageIndex - 1) * currentPageSize)
+    .limit(currentPageSize);
 
-  if (!project) {
-    appError(400, '查無此專案');
-  }
-  if (!messages) {
-    return next(appError(500, '查無相關訊息'));
-  }
   successHandler(res, '取得訊息', messages);
 });
-const getAdminProjectMessages = handleErrorAsync(async (req, res, next) => {
+const getProjectMsgOrCreateRoom = handleErrorAsync(async (req, res, next) => {
   const { projectId } = req.params;
+  const { id } = req.user;
+  const { pageIndex, pageSize } = req.query;
+  const currentPageIndex = isPositiveInteger(pageIndex)
+    ? pageIndex
+    : defaultPageIndex;
+  const currentPageSize = isPositiveInteger(pageSize)
+    ? pageSize
+    : defaultPageSize;
   if (!projectId || !ObjectId.isValid(projectId)) {
     return next(appError(400, '路由資訊錯誤'));
   }
-  const messages = await Message.find({ projectId })
-    .populate({
-      path: 'sender',
-      select: 'name nickName photo'
-    })
-    .populate({
-      path: 'receiver',
-      select: 'name nickName photo'
-    })
-    .populate({
-      path: 'projectId',
-      select: 'title'
-    })
-    .sort({ createdAt: -1 });
   const project = await Project.findById(projectId);
-
   if (!project) {
-    appError(400, '查無此專案');
+    return next(appError(400, '查無此專案'));
   }
-  if (
-    project.creator?.toString() !== messages.receiver ||
-    messages.projectId?.toString() !== project.id
-  ) {
-    appError(400, '查無此專案或專案發起人');
+  const room = await Room.findOne({
+    $and: [
+      {
+        participants: req.user
+      },
+      { projectId: projectId }
+    ]
+  });
+  if (!room) {
+    const newRoom = await Room.create({
+      participants: [req.user, project.creator],
+      projectId,
+      projectCreator: project.creator
+    });
+    successHandler(res, '建立新的聊天室窗', newRoom);
+  } else {
+    const messages = await Message.find({
+      $and: [
+        { roomId: room.id },
+        {
+          $or: [{ sender: id }, { receiver: id }]
+        }
+      ]
+    })
+      .populate({
+        path: 'sender',
+        select: 'name nickName photo'
+      })
+      .populate({
+        path: 'receiver',
+        select: 'name nickName photo'
+      })
+      .populate({
+        path: 'roomId',
+        populate: {
+          path: 'projectId',
+          select: 'title creator teamId',
+          populate: {
+            path: 'teamId',
+            select: 'title'
+          }
+        }
+      })
+      .sort({ createdAt: -1 })
+      .skip((currentPageIndex - 1) * currentPageSize)
+      .limit(currentPageSize);
+    if (!messages || messages.length === 0) {
+      return successHandler(res, '尚未建立訊息', []);
+    }
+    successHandler(res, '取得訊息', messages);
   }
-  if (!messages) {
-    return next(appError(500, '查無相關訊息'));
-  }
-  successHandler(res, '取得訊息', messages);
 });
 
 module.exports = {
-  createMessages,
-  getMemberMessages,
-  getProjectMessages,
-  getAdminProjectMessages
+  getChatRoomMessages,
+  getProjectMsgOrCreateRoom
 };

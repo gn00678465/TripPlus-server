@@ -1,11 +1,7 @@
-const {
-  createMessages,
-  getMemberMessages,
-  getProjectMessages,
-  getAdminProjectMessages
-} = require('./message');
+const { getChatRoomMessages, getProjectMsgOrCreateRoom } = require('./message');
+const { getUserChatroom, getAminChatroom } = require('./chatRoom');
 
-module.exports.createMessages = createMessages;
-module.exports.getMemberMessages = getMemberMessages;
-(module.exports.getProjectMessages = getProjectMessages),
-  (module.exports.getAdminProjectMessages = getAdminProjectMessages);
+module.exports.getChatRoomMessages = getChatRoomMessages;
+module.exports.getProjectMsgOrCreateRoom = getProjectMsgOrCreateRoom;
+module.exports.getUserChatroom = getUserChatroom;
+module.exports.getAminChatroom = getAminChatroom;
