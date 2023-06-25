@@ -20,7 +20,7 @@ router.get(
   messagesController.getProjectMsgOrCreateRoom
 );
 router.get(
-  '/admin_project/:roomId/message',
+  '/admin-project/:roomId/message',
   isAdmin,
   messagesController.getChatRoomMessages
 );

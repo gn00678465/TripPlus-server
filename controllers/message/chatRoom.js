@@ -48,20 +48,29 @@ const getUserChatroom = handleErrorAsync(async (req, res, next) => {
 const getAminChatroom = handleErrorAsync(async (req, res, next) => {
   const { id } = req.user;
   const { projectId } = req.params;
-  const chatRooms = await Room.find({
+  const rooms = await Room.find({
     $and: [{ projectId }, { participants: id }]
   });
-  if (!chatRooms || chatRooms.length === 0) {
+  const proj = await Project.findById(projectId);
+  if (proj.creator?.toString() !== id) {
+    return next(appError(403, '您無權限'));
+  }
+  if (!rooms || rooms.length === 0) {
     return next(appError(400, '查無聊天訊息'));
   }
-  const project = await Project.findById(projectId);
-  if (!project) {
+  if (!proj) {
     return next(appError(400, '查無此專案'));
   }
-
-  const messages = [];
-
-  for (const chatRoom of chatRooms) {
+  const project = {
+    title: proj.title,
+    keyVision: proj.keyVision,
+    creator: proj.creator
+  };
+  const result = {
+    project,
+    chatRooms: []
+  };
+  for (const chatRoom of rooms) {
     const message = await Message.find({
       roomId: chatRoom.id
     })
@@ -74,24 +83,20 @@ const getAminChatroom = handleErrorAsync(async (req, res, next) => {
         select: 'name nickName photo'
       })
       .populate({
-        path: 'roomId',
-        populate: {
-          path: 'projectId',
-          select: 'title creator'
-        }
+        path: 'roomId'
       })
       .sort({ createdAt: -1 })
       .limit(1);
 
     if (message.length > 0) {
       const customerId =
-        message[0].sender._id !== id
+        message[0].sender._id !== chatRoom.projectCreator
           ? message[0].sender._id
           : message[0].receiver._id;
 
-      messages.push({ customerId, message });
+      result.chatRooms.push({ customerId, message });
     }
   }
-  successHandler(res, '取得 ChatRoom 成功', messages);
+  successHandler(res, '取得 ChatRoom 成功', result);
 });
 module.exports = { getUserChatroom, getAminChatroom };
