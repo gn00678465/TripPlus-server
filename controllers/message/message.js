@@ -120,7 +120,7 @@ const getProjectMsgOrCreateRoom = handleErrorAsync(async (req, res, next) => {
       .skip((currentPageIndex - 1) * currentPageSize)
       .limit(currentPageSize);
     if (!messages || messages.length === 0) {
-      return successHandler(res, '尚未建立訊息', []);
+      return successHandler(res, '尚未建立訊息', room);
     }
     successHandler(res, '取得訊息', messages);
   }
