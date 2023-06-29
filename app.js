@@ -61,7 +61,7 @@ app.use('/admin/product', adminProductRouter);
 app.use('/order', orderRouter);
 app.use('/project', projectRouter);
 app.use('/proposer', proposerRouter);
-app.use('/message', messageRouter);
+app.use(messageRouter);
 app.use('/home', homeRouter);
 
 //for test

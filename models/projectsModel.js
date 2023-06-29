@@ -123,6 +123,12 @@ projectSchema.virtual('histories', {
   localField: '_id'
 });
 
+projectSchema.virtual('teams', {
+  ref: 'teams',
+  foreignField: 'projectId',
+  localField: '_id'
+});
+
 //募資進度
 projectSchema.virtual('progressRate').get(function () {
   return Math.round((this.sum / this.target) * 100);
