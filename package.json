@@ -1,13 +1,17 @@
 {
-  "name": "test4",
+  "name": "tripplus-server",
   "version": "0.0.0",
   "private": true,
+  "engines": {
+    "node": "^18"
+  },
   "scripts": {
+    "build": "echo hello",
     "start": "node ./bin/www",
     "start:dev": "NODE_ENV=dev nodemon ./bin/www",
-    "start:production": "NODE_ENV=production nodemon ./bin/www",
+    "start:production": "NODE_ENV=production node ./bin/www",
     "start:dev-window": "cross-env NODE_ENV=dev nodemon ./bin/www",
-    "start:production-window": "cross-env NODE_ENV=production nodemon ./bin/www",
+    "start:production-window": "cross-env NODE_ENV=production node ./bin/www",
     "swagger-autogen": "node ./swagger.js",
     "lint:lint-staged": "lint-staged",
     "format": "prettier --write \"./**/*.{html,tsx,jsx,ts,js,json,md}\"",
@@ -15,19 +19,28 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.36.2",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
+    "crypto-js": "^4.1.1",
     "debug": "~2.6.9",
     "dotenv": "^16.0.3",
-    "express": "~4.16.1",
+    "express": "^4.18.2",
     "firebase-admin": "^11.7.0",
     "jsonwebtoken": "^9.0.0",
     "lint-staged": "^13.2.1",
+    "moment": "^2.29.4",
     "mongoose": "^7.0.4",
     "morgan": "~1.9.1",
-    "multer": "1.4.5-lts.1",
+    "multer": "^1.4.5-lts.1",
+    "passport": "^0.6.0",
+    "passport-google-oauth20": "^2.0.0",
     "prettier": "^2.8.8",
+    "request": "^2.88.2",
+    "short-unique-id": "^4.4.4",
+    "socket.io": "^4.6.1",
+    "streamifier": "^0.1.1",
     "swagger-autogen": "^2.23.1",
     "swagger-ui-express": "^4.6.2",
     "uuid": "^9.0.0",
@@ -37,5 +50,10 @@
     "@commitlint/cli": "^17.6.1",
     "@commitlint/config-conventional": "^17.6.1",
     "husky": "^8.0.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "qs@>=6.5.0 <6.5.3": ">=6.5.3"
+    }
   }
 }
