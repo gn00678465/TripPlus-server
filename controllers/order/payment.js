@@ -192,7 +192,7 @@ const handlePayment = handleErrorAsync(async (req, res, next) => {
     ChoosePayment: 'Credit',
     EncryptType: 1,
     Remark: note,
-    ClientBackURL: 'https://frontend-development-mtbj.onrender.com',
+    ClientBackURL: process.env.CLIENT_URL,
     CustomField1: order.id
     // CustomField2: '',
     // CustomField3: '',
